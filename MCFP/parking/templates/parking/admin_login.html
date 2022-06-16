@@ -1,0 +1,41 @@
+{% load static %}
+<html>
+<head>
+{% include 'parking/headeradmin.html' %}
+
+</head>
+<body>
+{% include 'parking/nav1admin.html' %}
+
+
+<div class="container" style = "margin-top:70px">
+<h2 class="text-center" style = "font-family : Monotype Corsiva ; color : red">Admin Login</h2>
+<div class="form-group">
+<form method = post>
+    {% csrf_token %}
+<label><b>Enter UserName</b></label>
+<input type = text name = "username" class="form-control">
+
+<label><b>Enter Password</b></label>
+<input type = password name = password class="form-control">
+<br>
+<input type = checkbox name = rem> <b>Remember Me</b>
+<br>
+<br>
+<input type = submit name = login value = "Login" class="btn btn-primary form-control" >
+</form>
+</div>
+</div>
+</body>
+</html>
+{% if error == "no" %}
+<script>
+    alert('logged in successfully');
+    window.location=('{% url 'parking:admin_home' %}');
+</script>
+{% endif%}
+{% if error == "yes" %}
+<script>
+    alert('Invalid Login Credentials,Try Again...');
+</script>
+{% endif %}

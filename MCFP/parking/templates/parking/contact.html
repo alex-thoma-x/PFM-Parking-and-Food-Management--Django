@@ -1,0 +1,47 @@
+{% load static %}
+{% block body %}
+<html>
+<head>
+{% include 'parking/header.html' %}
+
+</head>
+<body>
+{% include 'parking/navigation.html' %}
+<style>
+a {
+  color:  #EE1D29;
+}
+a:hover {
+  color: yellow;
+}
+
+.contactlink:hover {
+  color: blue;
+}
+</style>
+<div class="container text-center" style = "margin-top:50px" id="contact">
+       <h1 class="text-center font-weight-bold" style="font-family : Monotype Corsiva;color : #EE1D29">Contact Us</h1>
+	 <br><br><br>
+      <div class="row mt-5">
+          <div class="col-lg-3 col-sm-6 mydivstyle">
+		  <h4><i class="fas fa-phone-square"></i> Contact</h4>
+              <p class = "mt-3 text-danger font-weight-bold"><a class = "contactlink" href="tel:+91 9998888775">+91 9998888775</a></p>
+          </div>
+          <div class="col-lg-3 col-sm-6 mydivstyle">
+		  <h4><i class="fas fa-envelope"></i> Send Mail</h4>
+              <p class = "mt-3 text-danger font-weight-bold"><a class = "contactlink" href="mailto:amalvijayan2022a@mca.ajce.in">abc@abc.mca.ajce.in</a></p>
+          </div>
+		  <div class="col-lg-3 col-sm-6 mydivstyle">
+		  <h4><i class="fas fa-address-card"></i> Office Address</h4>
+              <p class = "mt-3 text-danger font-weight-bold"><a class = "contactlink" href="https://www.google.com/maps/place/Amal+Jyothi+College+of+Engineering/@9.5283894,76.8222612,17z/data=!3m1!4b1!4m5!3m4!1s0x3b063626ed32c771:0xff305e1affdbb4b4!8m2!3d9.5283894!4d76.8222612">AJCE
+              Kanjirapally, KTM</a></p>
+          </div>
+		  <div class="col-lg-3 col-sm-6 mydivstyle">
+		  <h4><i class="far fa-clock"> </i> Office Hours</h4>
+              <p class = "mt-3 text-danger font-weight-bold">9:00 AM to 9:00 PM(12 Hrs)</p>
+          </div>
+      </div>
+  </div>
+  </body>
+  </html>
+{% endblock %}

@@ -1,0 +1,131 @@
+{% load static %}
+<html>
+<head>
+{% include 'parking/headeradmin.html' %}
+
+  <link rel = stylesheet href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+<link rel = stylesheet href="https://cdn.datatables.net/buttons/1.6.1/css/buttons.dataTables.min.css">
+
+<script src = https://code.jquery.com/jquery-3.3.1.js></script>
+<script src = https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js></script>
+<script src = https://cdn.datatables.net/buttons/1.6.1/js/dataTables.buttons.min.js></script>
+<script src = https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js></script>
+<script src = https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js></script>
+<script src = https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js></script>
+<script src = https://cdn.datatables.net/buttons/1.6.1/js/buttons.html5.min.js></script>
+
+
+
+
+
+<script>
+$(document).ready(function() {
+    $('#example').DataTable( {
+        dom: 'Bfrtip',
+        buttons: [
+            'copyHtml5',
+            'excelHtml5',
+            'csvHtml5',
+            'pdfHtml5'
+        ]
+    } );
+} );
+</script>
+
+</head>
+<body>
+{% include 'parking/nav2admin.html' %}
+<br> &nbsp;&nbsp;Welcome <b style = 'text-transform : capitalize ; color : blue'>{{request.user.username}}</b>
+
+
+<div class="container" style = "margin-top:10px">
+<h2 class="text-center" style = "font-family : Monotype Corsiva ; color : red"> <strong>Vehicle</strong>  Details</h2>
+
+
+ <table border="1" class="table table-bordered">
+                                            <tr>
+    <th>Parking Number</th>
+    <td>{{vehicle.id}}</td>
+  </tr>
+   <tr>
+    <th>Vehicle Category</th>
+    <td>{{vehicle.category}}</td>
+  </tr>
+
+
+  <tr>
+    <th>Registration Number</th>
+    <td>{{vehicle.regno}}</td>
+  </tr>
+
+  <tr>
+    <th>Owner Contact Number</th>
+    <td>{{vehicle.ownercontact}}</td>
+  </tr>
+     <tr>
+    <th>Date</th>
+    <td>{{vehicle.pdate}}</td>
+  </tr>
+  <tr>
+    <th>In Time</th>
+    <td>{{vehicle.intime}}</td>
+  </tr>
+  <tr>
+    <th>Status</th>
+    <td>{{vehicle.status}}</td>
+  </tr>
+
+
+
+
+
+    <form method="post">
+       {% csrf_token %}
+
+<!--             <tr>-->
+<!--    <th>Out Time :</th>-->
+<!--    <td>-->
+<!--    <input type = "time" name="outtime"  class="form-control wd-450" required="true"></td>-->
+<!--  </tr>-->
+<!--  <tr>-->
+    <th>Outing Remark :</th>
+    <td>
+    <textarea name="remark" placeholder="" rows="2" cols="14" class="form-control wd-450" ></textarea></td>
+<!--  </tr>-->
+
+<!--          <tr>-->
+<!--    <th>Parking Charge :</th>-->
+<!--    <td>-->
+<!--    <input type = "text" name="parkingcharge"  class="form-control wd-450" required="true"></td>-->
+<!--  </tr>-->
+
+
+
+ <tr align="center">
+    <td colspan="2"><button type="submit" name="submit" class="btn btn-primary btn-sm">Check Out</button></td>
+  </tr>
+                                        </form>
+
+
+</table>
+
+
+
+
+</div>
+</body>
+</html>
+
+{% if error == "no" %}
+<script>
+    alert('Vehicle Parking Detail has been updated');
+    window.location=('{% url 'print' vehicle.id %}');
+</script>
+{% endif %}
+{% if error ==  "yes" %}
+<script>
+    alert('Something Went Wrong. Please try again');
+</script>
+{% endif %}
+
+<!-- end document-->

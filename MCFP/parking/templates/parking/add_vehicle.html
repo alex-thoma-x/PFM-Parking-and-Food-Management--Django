@@ -1,0 +1,129 @@
+{% load static %}
+<html>
+<head>
+    <script type="text/javascript">
+        function validate1() {
+              var regno = document.myform.regno.value.trim();
+              var mobile1 = document.myform.ownercontact.value.trim();
+    
+    
+    
+              var filter =/^[A-Z]{2}\s[0-9]{1,2}\s[A-Z]{1,2}\s[0-9]{1,4}$/;
+              var phoneno = /^\d{10}$/;
+              if (document.myform.regno.value.trim() =="") {
+                  alert('Please enter Vehicle Registration Number');
+                //   document.myform.regno.value.focus();
+                  return false;
+              } 
+              else if (!filter.test(document.myform.regno.value.trim())) {
+                  alert('Registration Number Invalid Format');
+                //   document.myform.regno.value.focus();
+                  return false;
+              }
+              else if (document.myform.ownercontact.value.trim()=="") {
+                    alert('Please enter the mobile number.');
+                    return false;
+              } 
+              else if (!phoneno.test(document.myform.ownercontact.value.trim())) {
+                  alert('Invalid Mobile number');
+                  return false;
+                  }
+            else{
+                   return true;
+                }
+    }
+      </script>
+
+{% include 'parking/headeradmin.html' %}
+
+
+</head>
+
+
+<body>
+{% include 'parking/nav2admin.html' %}
+<br> &nbsp;&nbsp;Welcome <b style = 'text-transform : capitalize ; color : blue'>{{request.user.username}}</b>
+
+
+<div class="container" style = "margin-top:50px">
+<h2 class="text-center" style = "font-family : Monotype Corsiva ; color : red"><strong>Add</strong> Vehicle Detail</h2>
+
+<div class="form-group">
+<form method = "post"  enctype = "multipart/form-data"  name="myform" onsubmit="return validate1();" >
+    {% csrf_token %}
+<label><b>Vehicle Category</b></label>
+<select  name="category"  class="form-control" required>
+                           <option value="">---Select Vehicle Category---</option>
+                            {% for i in category1 %}
+                            <option value="{{i.categoryname}}">{{i.categoryname}}</option>
+                            {% endfor %}
+</select>
+
+
+
+     <label  ><b>Registration Number</b></label>
+
+      <input type="text"  name="regno" id="name" placeholder="Registration Number" class="form-control" >
+      <span id="checkname"></span>
+
+
+     <label  ><b>Owner Contact Number</b></label>
+    <input type="text"  name="ownercontact" id="phn" placeholder="Contact Number" maxlength="10" class="form-control" >
+    <span id="phone"></span>
+
+    <br>
+<input type = "submit" name = "submit" value = "Submit" class="btn btn-primary form-control" >
+</form>
+</div>
+
+
+
+</div>
+</body>
+
+  <!-- <script>
+    function vali()
+    {
+    var a = Document.getElementById('name').value.trim();
+    var b = Document.getElementById('phn').value.trim();
+
+
+    if(a =="")
+    {
+      document.getElementById('checkname').innerHtml="enter the name";
+      return false;
+    }
+    if(b =="")
+    {
+      Document.getElementById('phone').innerHtml="enter the phone";
+      return false;
+    }
+    else
+    {
+      return true;
+    }
+    }
+
+</script> -->
+</html>
+{% if exist == 0 %}
+<script>
+    alert('Vehicle with same Registration ALREADY PARKED!!.CONTACT AUTHORITY.');
+    window.location=('{% url 'parking:manage_incomingvehicle' %}');
+</script>
+{% endif %}
+
+
+{% if error == "no" %}    
+
+<script>
+    alert('Vehicle Detail has been added');
+    window.location='{% url 'parking:manage_incomingvehicle' %}';
+</script>
+{% endif %}
+{% if error ==  "yes" %}
+<script>
+    alert('Something Went Wrong. Please try again');
+</script>
+{% endif %}
+

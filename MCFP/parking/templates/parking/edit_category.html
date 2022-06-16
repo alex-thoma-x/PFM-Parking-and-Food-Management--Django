@@ -1,0 +1,42 @@
+{% load static %}
+<html>
+<head>
+{% include 'parking/headeradmin.html' %}
+
+</head>
+<body>
+{% include 'parking/nav2admin.html' %}
+<br> &nbsp;&nbsp;Welcome <b style = 'text-transform : capitalize ; color : blue'>{{request.user.username}}</b>
+
+
+<div class="container" style = "margin-top:50px">
+<h2 class="text-center" style = "font-family : Monotype Corsiva ; color : red">Edit Vehicle Category</h2>
+
+<div class="form-group">
+<form method = post enctype = "multipart/form-data">
+    {% csrf_token %}
+<label><b>Vehicle Category Name</b></label>
+<input type = text name = "categoryname" class="form-control" value="{{category.categoryname}}">
+
+
+<br>
+<input type = submit name = submit value = "Submit" class="btn btn-primary form-control" >
+</form>
+</div>
+
+
+
+</div>
+</body>
+</html>
+{% if error == "no" %}
+<script>
+    alert('Category has been updated.');
+    window.location=('{% url 'parking:manage_category' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+    alert('Something Went Wrong. Please try again');
+</script>
+{% endif %}

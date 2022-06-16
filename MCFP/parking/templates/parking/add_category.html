@@ -1,0 +1,71 @@
+{% load static %}
+<html>
+<head>
+    <script type="text/javascript">
+        function validate1() {       
+              var filter =/^\s*[A-Za-z]+(?:\s+[A-Za-z]+)*\s*$/;
+              
+              if (document.myform.categoryname.value.trim() =="") {
+                  alert('Please enter Vehicle Category');
+                //   document.myform.regno.value.focus();
+                  return false;
+              } 
+              else if (!filter.test(document.myform.categoryname.value.trim())) {
+                alert('Please Follow like "Two Wheeler"');
+                //   document.myform.regno.value.focus();
+                  return false;
+              }
+             
+            else{
+                   return true;
+                }
+    }
+      </script>
+{% include 'parking/headeradmin.html' %}
+
+</head>
+<body>
+{% include 'parking/nav2admin.html' %}
+<br> &nbsp;&nbsp;Welcome <b style = 'text-transform : capitalize ; color : blue'>{{request.user.username}}</b>
+
+
+<div class="container" style = "margin-top:50px">
+<h2 class="text-center" style = "font-family : Monotype Corsiva ; color : red"><strong>Add</strong> New Vehicle Category</h2>
+
+<div class="form-group">
+    <form method = "post"  enctype = "multipart/form-data"  name="myform" onsubmit="return validate1();" >
+    {% csrf_token %}
+<label><b>Vehicle Category Name</b></label>
+<input type = text name = "categoryname" id='categoryname' placeholder="Vehicle Category Name ex: Two Wheeler" class="form-control" >
+
+
+<br>
+<input type = "submit" name = "submit" value = "Submit" class="btn btn-primary form-control" >
+</form>
+</div>
+
+
+
+</div>
+</body>
+</html>
+
+{% if exist == 0 %}
+<script>
+    alert('Vehicle Category already exists.');
+    window.location=('{% url 'parking:manage_category' %}');
+</script>
+{% endif %}
+
+
+{% if error == "no" %}
+<script>
+    alert('Vehicle Category has been added.');
+    window.location=('{% url 'parking:manage_category' %}');
+</script>
+{% endif %}
+{% if error == "yes" %}
+<script>
+    alert('Something Went Wrong. Please try again');
+</script>
+{% endif %}

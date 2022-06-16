@@ -1,0 +1,36 @@
+{% extends 'webapp/base2.html'%}
+{% block title %}Add Menu{% endblock %}
+{% block body %}
+	<div class="container">
+	
+  	<input id="tab2" type="radio" name="tabs">
+  	<label for="tab2">Add Items</label>
+
+	<section id="content1">
+		<div class="order-top" style="border:0">
+			<p>
+				<h4>ADD ITEMS</h4>
+				<table class="table table-hover table-bordered">
+					<thead>
+						<th>Item Name</th>
+						<th>Category</th>
+						<th></th>
+					</thead>
+				
+					<tr>
+						<form action="" method="POST">{% csrf_token %}
+							<td><input id="iname" maxlength="30" name="iname" type="text"></td>
+							<td><input id="cat" maxlength="30" name="cat" type="text"></td>
+                            <td>
+                                <input type="submit" value="Add" name="submit" class="btn  btn-primary btn-lg">
+                            </td>
+						</form>
+					</tr>
+				
+				</table>
+			</p>
+		</div>
+	</section>
+</div>
+
+{% endblock %}

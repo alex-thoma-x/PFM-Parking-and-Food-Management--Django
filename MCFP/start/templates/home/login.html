@@ -1,0 +1,37 @@
+<form method = post>
+    {% csrf_token %}
+<label><b>Enter UserName</b></label>
+<input type = text name = "username" class="form-control">
+
+<label><b>Enter Password</b></label>
+<input type = password name = password class="form-control">
+<br>
+<input type = checkbox name = rem> <b>Remember Me</b>
+<br>
+<br>
+<input type = submit name = login value = "Login" class="btn btn-primary form-control" >
+</form>
+</div>
+</div>
+</body>
+</html>
+{% if error == "no" %}
+{% if role == 1 %}
+<script>
+    alert('logged in successfully');
+    window.location=('{% url 'parking:admin_home' %}');
+</script>
+{% endif%}
+{% if role == -1 %}
+<script>
+    alert('logged in successfully');
+    window.location=('{% url 'cctv:home' %}');
+</script>
+{% endif%}
+
+{% endif%}
+{% if error == "yes" %}
+<script>
+    alert('Invalid Login Credentials,Try Again...');
+</script>
+{% endif %}

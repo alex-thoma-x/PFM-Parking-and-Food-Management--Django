@@ -1,0 +1,43 @@
+html{
+scroll-behavior:smooth;
+}
+
+.navbar-brand{
+  
+  font-weight: bold;
+}
+
+.nav-link:hover{
+  color: #A74AD2 !important;
+  background-color:#A5BCF9;
+  border-radius:10px;
+}
+
+.navbar-brand:hover{
+  color: lightblue !important;
+  
+}
+
+.mydivstyle:hover{
+box-shadow:0 0 20px 0 rgba(0,0,0,0.3);
+transform:translateY(-20px)
+}
+
+
+
+
+/*scroll button start*/
+#scrollbtn
+{
+
+position:fixed;
+bottom:20px;
+right:40px;
+z-index:99;
+border:none;
+color:red;
+background:#00abff;
+padding:10px;
+border-radius:10px;
+}
+/*scroll button end*/

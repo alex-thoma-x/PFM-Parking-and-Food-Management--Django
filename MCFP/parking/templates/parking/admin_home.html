@@ -1,0 +1,135 @@
+{% load static %}
+
+<html>
+<head>
+{% include 'parking/headeradmin.html' %}
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+
+<style>
+.glow {
+  font-size: 80px;
+  color: #fff;
+  text-align: center;
+  -webkit-animation: glow 1s ease-in-out infinite alternate;
+
+}
+
+@-webkit-keyframes glow {
+  from {
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e60073, 0 0 40px #e60073, 0 0 50px #e60073, 0 0 60px #e60073, 0 0 70px #e60073;
+  }
+
+  to {
+    text-shadow: 0 0 20px #fff, 0 0 30px #ff4da6, 0 0 40px #ff4da6, 0 0 50px #ff4da6, 0 0 60px #ff4da6, 0 0 70px #ff4da6, 0 0 80px #ff4da6;
+  }
+}
+
+
+
+.prjdiv:hover{
+transform:translateY(-10px)
+}
+div .container1{
+
+
+background-color:lightgrey;
+border-radius:8px;
+}
+h2, h4{
+ padding:10Px;
+}
+
+</style>
+
+
+
+</head>
+<body>
+{% include 'parking/nav2admin.html' %}
+<br> &nbsp;&nbsp;Welcome <b style = 'text-transform : capitalize ; color : blue'>{{request.user.username}}</b>
+
+
+
+<div class="container" style = "margin-top:110px">
+
+<div class = "row">
+<div class = "col-sm-3 mydivstyle">
+<!--<h2 style = "color : blue ; font-weight : bold ; text-align : center">Add Vehicle</h2>-->
+    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center"><a href="{% url 'parking:add_vehicle' %}">Add Vehicle</a> <i class="fa fa-car"></i></h3>
+</div>
+
+<div class = "col-sm-3 mydivstyle">
+<!--<h2 style = "color : blue ; font-weight : bold ; text-align : center">Add Vehicle</h2>-->
+    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center"><a href="{% url 'parking:manage_incomingvehicle' %}">Check Out Vehicle</a> <i class="fa fa-car"></i></h3>
+</div>
+
+
+<div class = "col-sm-3 mydivstyle" >
+<h2 style = "color : blue ; font-weight : bold ; text-align : center">Todays Total  Vehicle Entries</h2>
+<h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{tv}} <i class="fa fa-car"></i></h3>
+</div>
+
+
+    <div class = "col-sm-3 mydivstyle">
+<h2 style = "color : blue ; font-weight : bold ; text-align : center">Todays {{request.user.username}}  Vehicle </br>Entries</h2>
+    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{g}} <i class="fa fa-car"></i></h3>
+</div>
+
+
+<div class = "col-sm-3 mydivstyle">
+<h2 style = "color : blue ; font-weight : bold ; text-align : center">Yesterdays {{request.user.username}} Vehicle Entries</h2>
+    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{yv}} <i class="fa fa-car"></i></h3>
+</div>
+
+    <div class = "col-sm-3 mydivstyle" >
+<h2 style = "color : blue ; font-weight : bold ; text-align : center">Last 7 days {{request.user.username}} Vehicle Entries</h2>
+<h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{ls}} <i class="fa fa-car"></i></h3>
+</div>
+
+
+<div class = "col-sm-3 mydivstyle">
+<h2 style = "color : blue ; font-weight : bold ; text-align : center">Total Vehicle </br>Entries</h2>
+    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{totalv}} <i class="fa fa-car"></i></h3>
+</div>
+
+</div>
+</div>
+
+<footer class="container pt-5 mt-5 text-center">
+
+
+
+<!--            <p style = "font-size : 30pt ; color : #FF0000 ; font-weight : bold">-->
+
+<!--            Copyright &copy;<script>document.write(new Date().getFullYear());</script> All Rights Reserved-->
+<!--                <span style = "color : brown">|</span>-->
+<!--                <span style = "color : #006400">This website is made with <i class="fas fa-heart icon-heart text-warning"></i> by </span><a class= "glow" href="#" target="_blank">Pankaj Panjwani</a>-->
+
+<!--            </p>-->
+
+
+    </footer>
+
+
+</body>
+</html>
+<?php
+function totalsubjects()
+{
+$query = "select * from subject";
+$rs = my_select($query);
+$n = mysqli_num_rows($rs);
+return $n;
+}
+
+function totalteachers()
+{
+$query = "select * from teacher";
+$rs = my_select($query);
+$n = mysqli_num_rows($rs);
+return $n;
+}
+
+
+?>

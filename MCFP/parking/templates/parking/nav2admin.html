@@ -1,0 +1,64 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark pl-5">
+<a class="navbar-brand">
+Parking Management
+</a>
+
+
+<button type = button class="navbar-toggler" data-toggle="collapse" data-target="#abc">
+<span class="navbar-toggler-icon"></span>
+</button>
+
+
+<div class="collapse navbar-collapse" id="abc" >
+<ul class="navbar-nav pl-5">
+<li class = "nav-item">
+<a href = "{% url 'parking:admin_home' %}" class="nav-link" style = "color : white"><i class="fas fa-home">&nbsp;</i>Home</a>
+</li>
+
+
+<li class="nav-item dropdown">
+	  <a  href="#" class="nav-link dropdown-toggle" style="color:white;"  data-toggle="dropdown">Category</a>
+
+	  <div class="dropdown-menu">
+	  <a class="dropdown-item" href="{% url 'parking:add_category' %}">Add Category</a>
+	    <a class="dropdown-item" href="{% url 'parking:manage_category' %}">Manage Category</a>
+	 </div>
+	 </li>
+
+
+<li class="nav-item dropdown">
+	  <a  href="#" class="nav-link dropdown-toggle" style="color:white;"  data-toggle="dropdown">Vehicle</a>
+
+	  <div class="dropdown-menu">
+	  <a class="dropdown-item" href="{% url 'parking:add_vehicle' %}">Add Vehicle</a>
+	    <a class="dropdown-item" href="{% url 'parking:manage_incomingvehicle' %}">Manage In Vehicle</a>
+		  <a class="dropdown-item" href="{% url 'parking:manage_outgoingvehicle' %}">Manage Out Vehicle</a>
+	 </div>
+	 </li>
+
+
+
+
+<li class = "nav-item">
+<a href = "{% url 'parking:search' %}" class="nav-link" style = "color : white">Search</a>
+</li>
+
+<li class = "nav-item">
+<a href = "{% url 'parking:betweendate_report' %}" class="nav-link" style = "color : white">Report</a>
+</li>
+
+
+
+
+	{% comment %} <li class = "nav-item">
+<a href = "{% url 'parking:change_password' %}" class="nav-link" style = "color : white">Change Password</a>
+</li> {% endcomment %}
+
+
+<li class = "nav-item">
+<a href = "{% url 'parking:logout' %}" class="nav-link" style = "color : white">Logout</a>
+</li>
+</ul>
+</div>
+
+</nav>
