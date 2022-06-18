@@ -24,8 +24,8 @@ def orderplaced(request):
 
 # Showing Restaurants list to Customer
 def restuarent(request):
-	if request.user.is_customer==False and request.user.is_superuser==False:
-		return redirect('food:logout')
+	# if request.user.is_customer==False and request.user.is_superuser==False:
+	# 	return redirect('food:logout')
 	r_object = Restaurant.objects.all()
 	query 	= request.GET.get('q')
 	if query:
@@ -128,6 +128,7 @@ def updateCustomer(request,id):
 	return render(request,'webapp/profile_form.html',context)
 
 @csrf_exempt
+@login_required(login_url='food:login')
 def restuarantMenu(request,pk=None):
 
 	menu = Menu.objects.filter(r_id=pk)
@@ -165,7 +166,7 @@ def checkout(request):
 		ordid = request.POST['oid']
 		Order.objects.filter(id=int(ordid)).update(delivery_addr = addr,
                                                     status=Order.ORDER_STATE_PLACED)
-		return redirect('/orderplaced/')
+		return redirect('food:oderplaced')
 	else:	
 		cart = request.COOKIES['cart'].split(",")
 		cart = dict(Counter(cart))
@@ -373,6 +374,67 @@ def menuManipulation(request):
 	}
 	return render(request,'webapp/menu_modify.html',context)
 
+#Order listiing  for users order of users and its status
+@login_required(login_url='food:login')
+def custorder(request):
+	orders = Order.objects.filter(orderedBy=request.user.id).order_by('-timestamp')
+	corders = []
+
+	for order in orders:
+
+		user = User.objects.filter(id=order.r_id.user.id)
+		user = user[0]
+		corder = []
+		if user.is_restaurant:
+			corder.append(user.restaurant.rname)
+			corder.append(user.restaurant.info)
+		else:
+			corder.append(user.customer.f_name)
+			corder.append(user.customer.phone)
+		items_list = orderItem.objects.filter(ord_id=order)
+
+		items = []
+		for item in items_list:
+			citem = []
+			citem.append(item.item_id)
+			citem.append(item.quantity)
+			menu = Menu.objects.filter(id=item.item_id.id)
+			citem.append(menu[0].price*item.quantity)
+			menu = 0
+			items.append(citem)
+
+		corder.append(items)
+		corder.append(order.total_amount)
+		corder.append(order.id)
+
+		x = order.status
+		if x == Order.ORDER_STATE_WAITING:
+		    continue
+		elif x == Order.ORDER_STATE_PLACED:
+		    x = 1
+		elif x == Order.ORDER_STATE_ACKNOWLEDGED:
+			x = 2
+		elif x == Order.ORDER_STATE_COMPLETED:
+			x = 3
+		elif x == Order.ORDER_STATE_DISPATCHED:
+			x = 4
+		elif x == Order.ORDER_STATE_CANCELLED:
+			x = 5
+		else:
+			continue
+
+		corder.append(x)
+		corder.append(order.delivery_addr)
+		corders.append(corder)
+
+	context = {
+		"orders" : corders,
+	}
+	return render(request,"webapp/custorder.html",context)
+
+
+
+@login_required(login_url='/login/restaurant/')	
 def orderlist(request):
 	if request.user.is_restaurant==False and request.user.is_superuser==False:
 		return redirect('food:logout')

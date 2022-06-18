@@ -1,4 +1,4 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse,redirect
 from django.contrib.auth import login, logout, authenticate
 from .models import User
 # Create your views here.
@@ -29,9 +29,9 @@ def homelogin(request):
         elif user.is_cctv:
             rle=2
         elif user.is_restaurant:
-            return redirect('food:mmenu')
+            return render(request, 'webapp/order-list.html')
         elif user.is_customer:
-            return redirect('food:restaurant')
+            return render(request, 'webapp/restaurents.html')
         else:
             return render(request, 'home/adindex.html')
         print(error)

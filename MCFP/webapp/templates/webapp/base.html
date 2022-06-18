@@ -31,7 +31,7 @@
                 <a class="nav-link text-light" href="{% url 'food:index' %}"><font size="3">&nbsp; <strong>Home</strong> </font></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link text-light" href="{% url 'food:restuarant' %}"><font size="3">&nbsp;<strong>Restuarants</strong></font></a>
+                <a class="nav-link text-light" href="{% url 'food:restuarant' %}"><font size="3">&nbsp;<strong>Store</strong></font></a>
             </li>
             
         </ul>
@@ -52,6 +52,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link text-light" href="{% url 'food:profile' %}"><font size="3"> &nbsp;<span aria-hidden="true"></span><strong>My Profile</strong></font></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-light" href="{% url 'food:custorder' %}"><font size="3"> &nbsp;<span aria-hidden="true"></span><strong>orders</strong></font></a>
             </li>
           {% else %}
             <li class="nav-item">

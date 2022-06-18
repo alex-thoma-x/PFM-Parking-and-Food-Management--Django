@@ -46,7 +46,7 @@ def admin_login(request):
 def admin_home(request):
     if not request.user.is_authenticated:
         return redirect('admin_login')
-    if request.user.is_gate==False and request.user.is_superuser==False:
+    if request.user.is_gate==False:
         return redirect('parking:logout')
     today = datetime.now().date()
     yesterday = today - timedelta(1)
@@ -64,7 +64,7 @@ def admin_home(request):
 
 def Logout(request):
     logout(request)
-    return redirect('parking:index')
+    return redirect('home:staff')
 
 @login_required(login_url='home:login')
 def change_password(request):

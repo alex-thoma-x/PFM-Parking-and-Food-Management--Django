@@ -96,7 +96,7 @@ var cart = [];
 		}
 		document.cookie = "cart="+cart+";Path=/";
 		document.cookie ="rest={{restid}};Path=/";
-		window.location = "/checkout/";
+		window.location = "{% url 'food:checkout' %}";
 	};
 </script>
 {% endblock %}

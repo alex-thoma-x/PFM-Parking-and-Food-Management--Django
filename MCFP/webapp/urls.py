@@ -5,7 +5,8 @@ app_name='food'
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('orderplaced/',views.orderplaced),
+    
+    path('orderplaced/',views.orderplaced,name='oderplaced'),
     path('restaurant/',views.restuarent,name='restuarant'),
     path('register/user/',views.customerRegister,name='register'),
     path('login/user/',views.customerLogin,name='login'),
@@ -23,5 +24,6 @@ urlpatterns = [
     path('logout/',views.Logout,name='logout'),
     path('restaurant/<int:pk>/',views.restuarantMenu,name='menu'),
     path('checkout/',views.checkout,name='checkout'),
+    path('custorder/',views.custorder,name='custorder'),
 
 ]

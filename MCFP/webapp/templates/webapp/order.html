@@ -24,10 +24,10 @@
 				<br>
 				<form action="" method="POST">
 							{% csrf_token %}
-							<span><strong>Delivery Address:</strong></span>
+							<span><strong>Table Number:</strong></span>
 							<br>
 							<br>
-							<div><input type="text" name="address" style="width:60%; height: 60px;" required/></div>
+							<div><input type="number" name="address" required/></div>
 							<input type="hidden" name="oid" value="{{oid}}">
 							<br>
 							<input type="submit" class="btn btn-success btn-lg" value="Order" name="submit">

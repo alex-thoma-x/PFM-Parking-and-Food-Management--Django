@@ -60,10 +60,17 @@
     <div class="navbar-collapse collapse w-100 dual-collapse2 order-2 order-md-2">
         <ul class="navbar-nav mr-auto text-center">
             <li class="nav-item">
-                <a class="nav-link text-light" href="{% url 'food:rlogin'%}"> &nbsp;<strong>For Restaurants</strong> </a>
+                <a class="nav-link text-light" href="{% url 'food:rlogin'%}"> &nbsp;<strong>For Store</strong> </a>
             </li>
         </ul>
     </div>
+    <div class="navbar-collapse collapse w-100 dual-collapse2 order-2 order-md-2">
+      <ul class="navbar-nav mr-auto text-center">
+          <li class="nav-item">
+              <a class="nav-link text-light" href="{% url 'home:staff'%}"> &nbsp;<strong>For staff</strong> </a>
+          </li>
+      </ul>
+  </div>
 </div>
 
 </nav>
@@ -74,22 +81,21 @@
 			<div class="col">
 				<div class="col4 text-light ">
 					<h1 style="font-style:italic; font-family:sans-serif; "><strong>Feeling Hungry</strong></h1>
-					<h2><strong>Register Now<br/>and<br/>Order Online</strong></h2>
+					<h2><strong>Register Now<br/>and<br/>Order Now</strong></h2>
 				</div>
 			<br>
       <button type="button" class="btn btn-success btn-lg"><strong><a href="{% url 'food:register'%}" class="text-light">Register</a></strong></button>
 			</div>
         <div class="col">
-          <div class="col4 text-light">
-            <h1 style="font-style:italic; font-family:sans-serif; "><strong>Be a Partner</strong></h1>
+           <div class="col4 text-light">
+            <!-- <h1 style="font-style:italic; font-family:sans-serif; "><strong>Be a Partner</strong></h1>
           <h2><strong>Join Us Today<br/>and<br>Increase Your Sale</strong></h2>
-        </div>
+        </div> 
         <br>
-        <button type="button" class="btn btn-success btn-lg"><strong><a href="{% url 'food:rregister'%}" class="text-light">Join Us</a></strong></button>
+        <button type="button" class="btn btn-success btn-lg"><strong><a href="{% url 'food:rregister'%}" class="text-light">Join Us</a></strong></button> -->
       </div>
       </div>
-    </div>
-
+    </div> 
 	</div>
 </div>
 
@@ -106,7 +112,7 @@
 				<div class="row ">
 					<div class="col-sm-2 col-md-2">
 						<div class="thumbnail borders text-light">
-							<p>Choose <span>Your Restaurant</span></p>
+							<p>Choose <span>The Store</span></p>
 						</div>
 					</div>
 					<div class="col-sm-2 col-md-2 ">
@@ -137,7 +143,7 @@
 
 <div class="container col-md-9">
 		<div class="top-restaurent-head">
-						<h3>Top Restaurants</h3>
+						<h3>Top Stores</h3>
 		</div> 
 		<div class="row">
 			 
