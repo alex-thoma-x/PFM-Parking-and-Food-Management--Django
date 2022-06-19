@@ -49,6 +49,13 @@ class RestuarantForm(forms.ModelForm):
 		fields =['rname','info','location','r_logo','min_ord']
 
 
+class itemadd(forms.ModelForm):
+	class Meta:
+		model = Item
+		fields =['fname','category','img']
+
+
+
 
 
 

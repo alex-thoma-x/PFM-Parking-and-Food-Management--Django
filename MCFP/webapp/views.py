@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login,logout
-from .forms import CustomerSignUpForm,RestuarantSignUpForm,CustomerForm,RestuarantForm
+from .forms import CustomerSignUpForm,RestuarantSignUpForm,CustomerForm,RestuarantForm, itemadd
 from django.contrib.auth.decorators import login_required
 from collections import Counter
 from django.urls import reverse
@@ -138,6 +138,7 @@ def restuarantMenu(request,pk=None):
 	for i in menu:
 		item = Item.objects.filter(fname=i.item_id)
 		for content in item:
+			
 			temp=[]
 			temp.append(content.fname)
 			temp.append(content.category)
@@ -145,6 +146,7 @@ def restuarantMenu(request,pk=None):
 			temp.append(i.id)
 			temp.append(rest[0].status)
 			temp.append(i.quantity)
+			temp.append(content.img)
 			items.append(temp)
 	context = {
 		'items'	: items,
@@ -296,26 +298,30 @@ def additem(request):
 	if not request.user.is_authenticated:
 		return redirect("food:rlogin") 
 	if request.POST:
-		rest=Restaurant.objects.filter(id=request.user.restaurant.id);
-		rest=rest[0]
-		rid=(request.user.restaurant.id)
-		type=request.POST['submit']
-		it = (request.POST['iname'])
-		cat	 = (request.POST['cat'])
-		item=Item()
-		item.fname=it
-		item.category=cat
-		item.rid=rid
-		try:
-			item.save()
-		except:
-			err=False
-		if err:
-			return redirect('food:mmenu')
-
-       
-		
-	return render(request,'webapp/additem.html')
+		form = itemadd(request.POST, request.FILES)
+		if form.is_valid():
+			obj=form.save(commit=False)
+			obj.rid=request.user.restaurant.id
+			obj.save()
+		# rest=Restaurant.objects.filter(id=request.user.restaurant.id);
+		# rest=rest[0]
+		# rid=(request.user.restaurant.id)
+		# type=request.POST['submit']
+		# it = (request.POST['iname'])
+		# cat	 = (request.POST['cat'])
+		# item=Item()
+		# item.fname=it
+		# item.category=cat
+		# item.rid=rid
+		# try:
+		# 	item.save()
+		# except:
+		# 	err=False
+		# if err:
+		# 	return redirect('food:mmenu')
+	else:
+		form=itemadd()      		
+	return render(request,'webapp/additem.html',{'form' : form})
 
 # add  menu item for restaurant	
 @login_required(login_url='/login/restaurant/')		
@@ -360,8 +366,10 @@ def menuManipulation(request):
 		menu.append(cmenu)
 
 	menuitems = Item.objects.filter(rid=request.user.restaurant.id)
+	
 	items = []
 	for y in menuitems:
+		print(y)
 		citem = []
 		citem.append(y.id)
 		citem.append(y.fname)
@@ -402,6 +410,7 @@ def custorder(request):
 			citem.append(menu[0].price*item.quantity)
 			menu = 0
 			items.append(citem)
+			print(items)
 
 		corder.append(items)
 		corder.append(order.total_amount)
@@ -467,6 +476,7 @@ def orderlist(request):
 
 		user = User.objects.filter(id=order.orderedBy.id)
 		user = user[0]
+		print(user.is_customer)
 		corder = []
 		if user.is_restaurant:
 			corder.append(user.restaurant.rname)

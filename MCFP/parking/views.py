@@ -52,13 +52,18 @@ def admin_home(request):
     yesterday = today - timedelta(1)
     lasts = today - timedelta(7)
 
+    s=parking_slots.objects.filter(user=request.user.id)
+    print(s)
+    for i in s:
+        slot=i.Total_Slots-i.parked
+    
     tv = Vehicle.objects.filter(pdate=today).count()
     yv = Vehicle.objects.filter(pdate=yesterday,gate=request.user.username).count()
     g = Vehicle.objects.filter(pdate=today, gate=request.user.username).count()
     ls = Vehicle.objects.filter(pdate__gte=lasts, pdate__lte=today,gate=request.user.username).count()
     totalv = Vehicle.objects.all().count()
 
-    d = {'tv': tv, 'yv': yv, 'ls': ls, 'totalv': totalv, 'g': g}
+    d = {'tv': tv, 'yv': yv, 'ls': ls, 'totalv': totalv, 'g': g,'slot':slot}
     return render(request, 'parking/admin_home.html', d)
 
 
@@ -163,35 +168,49 @@ def add_vehicle(request):
         return redirect('parking:logout')
     error = ""
     exist=1
+    space=False
+    s=parking_slots.objects.filter(user=request.user.id)
+    for i in s:
+        slot=i.Total_Slots-i.parked
+    print(slot)
     category1 = Category.objects.all()
     if request.method == "POST":
+        if slot!=0:
 
-        usr = request.user.username
-        import time
-        t = time.localtime()
-        current_time = time.strftime("%H:%M", t)
+            usr = request.user.username
+            import time
+            t = time.localtime()
+            current_time = time.strftime("%H:%M", t)
 
-        ct = request.POST['category']
-        rn = request.POST['regno']
-        oc = request.POST['ownercontact']
-        it = current_time
+            ct = request.POST['category']
+            rn = request.POST['regno']
+            oc = request.POST['ownercontact']
+            it = current_time
+            
+            
+            import datetime
+            i = datetime.date.today()
 
-        import datetime
-        i = datetime.date.today()
-
-        status = "In"
-        category = Category.objects.get(categoryname=ct)
-        vehicle = Vehicle.objects.filter(regno=rn,status="In")
-        if vehicle.count() != 0:
-            exist = 0
+            status = "In"
+            category = Category.objects.get(categoryname=ct)
+            vehicle = Vehicle.objects.filter(regno=rn,status="In")
+            if vehicle.count() != 0:
+                exist = 0
+            else:
+                try:
+                    Vehicle.objects.create(category=category, regno=rn, ownercontact=oc, pdate=i, intime=it, outtime='',
+                                        parkingcharge='', status=status, gate=usr)
+                    for i in s:
+                        slot=i.Total_Slots-i.parked
+                        add_slot=i.parked+1
+                        i.parked=add_slot
+                        i.save()
+                    error = "no"
+                except:
+                    error = "yes"
         else:
-            try:
-                Vehicle.objects.create(category=category, regno=rn, ownercontact=oc, pdate=i, intime=it, outtime='',
-                                    parkingcharge='', status=status, gate=usr)
-                error = "no"
-            except:
-                error = "yes"
-    d = {'error': error, 'category1': category1,'exist':exist}
+            space=True
+    d = {'error': error, 'category1': category1,'exist':exist,'space':space}
     return render(request, 'parking/add_vehicle.html', d)
 
 
@@ -235,12 +254,17 @@ def view_incomingdetail(request, pid):
             p=p+current_time-datetime.strptime(vehicle.intime,"%H:%M")
         pc =((p.total_seconds()%3600)// 60)*10
         status = "Out"
+        s=parking_slots.object.filter(user=request.user.id)
+        slot=s.Total_Slots - s.parked
         try:
+            add_slot=s.parked-1
+            s.parked=add_slot
             vehicle.remark = rm
             vehicle.outtime = out_time
             vehicle.parkingcharge = pc
             vehicle.status = status
             vehicle.save()
+            s.save()
             error = "no"
         except:
             error = "yes"

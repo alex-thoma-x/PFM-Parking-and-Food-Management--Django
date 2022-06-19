@@ -23,13 +23,14 @@
 			<br>
 				<table class="table table-hover table-bordered">
 					<thead>
+						<th>Item Picture</th>
 						<th>Item Name</th>
 						<th>Category</th>
 						<th>Price</th>
 						<th>Add</th>
 					</thead>
 					{% for x in items %}
-					<tr>
+					<td><img src="{{x.6.url}}"  height="50px" width="60%"></td>
 					<td>{{x.0}}</td>
 					<td>{{x.1}}</td>
 					<td>&#x20b9; {{x.2}}</td>

@@ -1,3 +1,4 @@
+from email.policy import default
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -14,7 +15,7 @@ class Customer(models.Model):
 	f_name   	= models.CharField(max_length=20,blank=False)
 	l_name		= models.CharField(max_length=20,blank=False)
 	# city  		= models.CharField(max_length=40,blank=False)
-	phone 		= models.IntegerField(max_length=10,blank=False)
+	phone 		= models.IntegerField(blank=False)
 	
 	def __str__(self):
 		return self.user.username
@@ -44,6 +45,7 @@ class Item(models.Model):
 	fname 		= models.CharField(max_length=30,blank=False)
 	category 	= models.CharField(max_length=50,blank=False)
 	rid			= models.IntegerField(null=False,default=-1)
+	img			=models.ImageField(blank=False)
 
 
 	def __str__(self):
@@ -57,7 +59,7 @@ class Menu(models.Model):
 	quantity = models.IntegerField(blank=False,default=0)
 
 	def __str__(self):
-		return self.item_id.fname+' - '+str(self.price)
+		return self.item_id.fname+'   - '+str(self.price)+'\t \ Piece'
 	
 
 class Order(models.Model):

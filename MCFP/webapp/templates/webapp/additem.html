@@ -18,10 +18,13 @@
 					</thead>
 				
 					<tr>
-						<form action="" method="POST">{% csrf_token %}
-							<td><input id="iname" maxlength="30" name="iname" type="text"></td>
-							<td><input id="cat" maxlength="30" name="cat" type="text"></td>
-                            <td>
+						<form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
+							{% csrf_token %}
+							{% for field in form %}
+							<td>{{ field }}</td>
+							<!-- <td>{{ form.as_p }}</td> -->
+							{% endfor %}
+							<td>
                                 <input type="submit" value="Add" name="submit" class="btn  btn-primary btn-lg">
                             </td>
 						</form>

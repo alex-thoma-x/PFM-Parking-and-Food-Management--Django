@@ -9,5 +9,5 @@ app_name='home'
 urlpatterns = [
     # path("",v.Index,name='home'),
     path("",w.index,name='index'),
-    path("/staff", views.homelogin,name='staff')
+    path("staff", views.homelogin,name='staff')
    ]

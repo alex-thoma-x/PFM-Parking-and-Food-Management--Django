@@ -1,7 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.conf import settings
 
 # Create your models here.
+class parking_slots(models.Model):
+    user 		= models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    Total_Slots = models.IntegerField(null=False,default=20)
+    parked       =models.IntegerField(null=False,default=0)
+	
+   
+
 
 class Category(models.Model):
     categoryname = models.CharField(max_length=50)

@@ -59,6 +59,11 @@ h2, h4{
     <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center"><a href="{% url 'parking:add_vehicle' %}">Add Vehicle</a> <i class="fa fa-car"></i></h3>
 </div>
 
+<div class = "col-sm-3 mydivstyle" >
+  <h2 style = "color : blue ; font-weight : bold ; text-align : center">SLOTS LEFT</h2>
+  <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{slot}} <i class="fa fa-car"></i></h3>
+  </div>
+
 <div class = "col-sm-3 mydivstyle">
 <!--<h2 style = "color : blue ; font-weight : bold ; text-align : center">Add Vehicle</h2>-->
     <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center"><a href="{% url 'parking:manage_incomingvehicle' %}">Check Out Vehicle</a> <i class="fa fa-car"></i></h3>
