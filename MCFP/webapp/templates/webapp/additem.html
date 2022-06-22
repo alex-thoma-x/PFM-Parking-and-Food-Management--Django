@@ -21,10 +21,16 @@
 						<form action="" method="POST" enctype="multipart/form-data">{% csrf_token %}
 							{% csrf_token %}
 							{% for field in form %}
-							<td>{{ field }}</td>
-							<!-- <td>{{ form.as_p }}</td> -->
-							{% endfor %}
 							<td>
+							<div class="form-group">
+								<div class="col-sm-offset-2 col-sm-12">
+									<span class="text-danger small">{{ field.errors }}</span>
+								</div>
+								<div class="col-sm-7">{{ field }}</div>
+							</div>
+						</td>
+						{% endfor %}
+						<td>
                                 <input type="submit" value="Add" name="submit" class="btn  btn-primary btn-lg">
                             </td>
 						</form>

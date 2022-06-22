@@ -6,13 +6,24 @@ from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 import re
+from .models import Restaurant
 
 def usr_name(value):
-	pattern = re.compile("/^[A-Za-z]+$/")
+	pattern = re.compile("^[a-zA-Z]{3,}$")
 	#"^[A-Za-z]\\w{5, 29}$"
-	if not pattern.match(value) or len(value)>30 or len(value)<6:
-		raise ValidationError("Only Alphabets and min 6 and max 30 Charcters")
+	if  len(value)>30 or len(value)<=5:
+		raise ValidationError("Min 5 and Max 12 Characters")
+	if not pattern.match(value):
+		raise ValidationError("Only Alphabets")
 		
+def rest_name(value):
+	pattern = re.compile("^[a-zA-Z]{3,}$")
+	#"^[A-Za-z]\\w{5, 29}$"
+	if  len(value)>30 or len(value)<=2:
+		raise ValidationError("Min 2 and Max 12 Characters")
+	if not pattern.match(value):
+		raise ValidationError("Only Alphabets and min 6 and max 30 Charcters")
+
 
 def passw(value):
 	if validate_password(value):
@@ -23,6 +34,17 @@ def mobile(value):
     raise ValidationError("Invalid Mobile")
 
 
+# def store_loc(value):
+# 	s=set()
+# 	r=Restaurant.objects.location()
+# 	for i in r:
+# 		s.add(i)
+# 	if value in s:
+# 		raise ValidationError("Location Already Exist")
+
+
+
+
 class CustomerSignUpForm(forms.ModelForm):
 	username = forms.CharField(initial = "username",max_length = 12,validators=[usr_name])
 	password = forms.CharField(widget=forms.PasswordInput,validators=[passw])
@@ -31,16 +53,7 @@ class CustomerSignUpForm(forms.ModelForm):
 	class Meta:
 		model = User
 		fields=['username','email','password']
-		
-		help_texts = {
-            'password': _('Min 8 characters'),
-        }
-		
-							
-							
-	
-
-
+													
 		def save(self, commit=True):
 			user = super().save(commit=False)
 			user.is_customer=True
@@ -87,13 +100,24 @@ class CustomerForm(forms.ModelForm):
 
 
 class RestuarantForm(forms.ModelForm):
-	rname = forms.CharField(initial = "Restaurant Name",max_length = 14,required = True,validators=[usr_name])
+	rname = forms.CharField(initial = "Restaurant Name",max_length = 14,required = True,validators=[rest_name])
+	# location=forms.CharField(validators=['store_loc'])
 	class Meta:
 		model = Restaurant
-		fields =['rname','info','location','r_logo','min_ord']
+		fields =['rname','info','location','r_logo']
 
+cat_choices =(
+("Arabian", "Arabian"),
+("Indian", "Indian"),
+("Biriyani","Biriyani"),
+("Pizza",'Pizza'),
+("Italian","Italian"),
+('Snacks','Snacks')
+)
 
 class itemadd(forms.ModelForm):
+	fname = forms.CharField(initial = "Item",max_length = 12,required = True,validators=[usr_name])
+	category=forms.ChoiceField(choices=cat_choices,required=True)
 	class Meta:
 		model = Item
 		fields =['fname','category','img']

@@ -24,8 +24,8 @@ class Restaurant(models.Model):
 	user        = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
 	rname 		= models.CharField(max_length=100,blank=False)
 	info	 	= models.CharField(max_length=40,blank=False)
-	min_ord		= models.CharField(max_length=5,blank=False)
-	location    = models.CharField(max_length=40,blank=False)
+	# min_ord		= models.CharField(max_length=5,blank=False)
+	location    = models.CharField(max_length=40,blank=False,unique=True)
 	r_logo      = models.FileField(blank=False)
 
 	REST_STATE_OPEN    = "Open"
@@ -42,7 +42,7 @@ class Restaurant(models.Model):
 		
 class Item(models.Model):
 	id 			= models.AutoField(primary_key=True)
-	fname 		= models.CharField(max_length=30,blank=False)
+	fname 		= models.CharField(max_length=30,blank=False,unique=True)
 	category 	= models.CharField(max_length=50,blank=False)
 	rid			= models.IntegerField(null=False,default=-1)
 	img			=models.ImageField(blank=False)

@@ -154,7 +154,7 @@ def restuarantMenu(request,pk=None):
 		'items'	: items,
 		'rid' 	: pk,
 		'rname'	: rest[0].rname,
-		'rmin'	: rest[0].min_ord,
+		# 'rmin'	: rest[0].min_ord,
 		'rinfo' : rest[0].info,
 		'rlocation':rest[0].location,
 	}
@@ -251,6 +251,7 @@ def restLogin(request):
 
 
 # restaurant profile view
+@login_required(login_url='/login/restaurant/')
 def restaurantProfile(request,pk=None):
 	if pk:
 		user = User.objects.get(pk=pk)
@@ -478,7 +479,7 @@ def orderlist(request):
 
 		user = User.objects.filter(id=order.orderedBy.id)
 		user = user[0]
-		print(user.is_customer)
+		print(user.customer.f_name)
 		corder = []
 		if user.is_restaurant:
 			corder.append(user.restaurant.rname)
