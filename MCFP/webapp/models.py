@@ -15,7 +15,7 @@ class Customer(models.Model):
 	f_name   	= models.CharField(max_length=20,blank=False)
 	l_name		= models.CharField(max_length=20,blank=False)
 	# city  		= models.CharField(max_length=40,blank=False)
-	phone 		= models.IntegerField(blank=False)
+	phone 		= models.IntegerField(blank=False,unique=True)
 	
 	def __str__(self):
 		return self.user.username

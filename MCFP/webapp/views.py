@@ -9,12 +9,14 @@ from .models import Customer,Restaurant,Item,Menu,Order,orderItem
 from start.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from parking.models import parking_slots
 
 #### ---------- General Side -------------------#####
 
 # Showing index page
 def index(request):
-	return render(request,'webapp/index.html',{})
+	slots=parking_slots.objects.all()
+	return render(request,'webapp/index.html',{'slots':slots})
 
 @login_required(login_url='food:index')
 def orderplaced(request):

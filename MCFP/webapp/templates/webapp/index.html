@@ -2,6 +2,7 @@
 <html>
 <head>
    {% load static %}
+   {% load mathfilters %}
   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -84,10 +85,32 @@
 					<h2><strong>Register Now<br/>and<br/>Order Now</strong></h2>
 				</div>
 			<br>
+      <button type="button" class="btn btn-success btn-lg"><strong><a href="{% url 'food:login'%}" class="text-light">Login</a></strong></button>
       <button type="button" class="btn btn-success btn-lg"><strong><a href="{% url 'food:register'%}" class="text-light">Register</a></strong></button>
 			</div>
         <div class="col">
            <div class="col4 text-light">
+             <table>
+               <tr>
+               <th>Gate</th>
+               <th>Slots Available</th>
+               </tr>
+            
+             {% if slots %}
+             {% for i in slots %}
+             <tr>
+               {% with x=i.Total_Slots %}
+               {% with y=i.parked %}
+             <td>{{i.user.username}}</td>
+             <td>{{x|sub:y}}</td>
+             {% endwith %}
+             {% endwith %}
+             </tr>
+             {% endfor %}
+             {% endif %}
+
+            </table>
+
             <!-- <h1 style="font-style:italic; font-family:sans-serif; "><strong>Be a Partner</strong></h1>
           <h2><strong>Join Us Today<br/>and<br>Increase Your Sale</strong></h2>
         </div> 
