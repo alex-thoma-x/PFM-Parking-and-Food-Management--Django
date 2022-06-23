@@ -7,6 +7,8 @@ class parking_slots(models.Model):
     user 		= models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,verbose_name='Gate')
     Total_Slots = models.IntegerField(null=False,default=20,verbose_name='Total slots')
     parked       =models.IntegerField(null=False,default=0,verbose_name='Parked slots')
+    class Meta:        
+        verbose_name="Parking Slots- Statu"
 	
    
 
@@ -15,6 +17,8 @@ class Category(models.Model):
     categoryname = models.CharField(max_length=50,verbose_name='Vehicle Category')
     def __str__(self):
         return self.categoryname
+    class Meta:        
+        verbose_name="Vehicle Categorie"
 
 
 
@@ -32,6 +36,8 @@ class Vehicle(models.Model):
     status = models.CharField(max_length=20)
     def __int__(self):
         return self.id
+    class Meta:        
+        verbose_name="Vehicle"
 
 
 

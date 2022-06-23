@@ -8,16 +8,19 @@ class customer(admin.ModelAdmin):
         'user', 'f_name','l_name', 'phone'
         )
 class restaurant(admin.ModelAdmin):
+    search_fields = ['rname']
     list_display = (
         'user', 'rname','info', 'location'
         )
 
 class item(admin.ModelAdmin):
+    list_filter = ['category']
     list_display = (
         'fname', 'category'
         )
 
 class menu(admin.ModelAdmin):
+    list_filter = ['r_id','item_id']
     list_display = (
         'r_id', 'item_id','price','quantity'
         )
@@ -33,4 +36,4 @@ admin.site.register(Restaurant,restaurant)
 admin.site.register(Item,item)
 admin.site.register(Menu,menu)
 admin.site.register(Order,order)
-admin.site.register(orderItem)
+# admin.site.register(orderItem)

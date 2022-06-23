@@ -31,7 +31,7 @@ def admin_login(request):
         user = authenticate(username=u, password=p)
         rle=0
         try:
-            if user.is_staff:
+            if user.is_staff and user.is_gate:
                 login(request, user)
                 error = "no"
             else:
@@ -169,6 +169,7 @@ def add_vehicle(request):
     error = ""
     exist=1
     space=False
+    mob=False
     s=parking_slots.objects.filter(user=request.user.id)
     for i in s:
         slot=i.Total_Slots-i.parked
@@ -189,13 +190,18 @@ def add_vehicle(request):
             
             
             import datetime
-            i = datetime.date.today()
+            i = datetime.datetime.now()
+            i=i.date()
 
             status = "In"
             category = Category.objects.get(categoryname=ct)
             vehicle = Vehicle.objects.filter(regno=rn,status="In")
+            mobile=Vehicle.objects.filter(ownercontact=oc,status="In")
+
             if vehicle.count() != 0:
                 exist = 0
+            elif mobile.count()!=0:
+                mob=True                
             else:
                 try:
                     Vehicle.objects.create(category=category, regno=rn, ownercontact=oc, pdate=i, intime=it, outtime='',
@@ -210,7 +216,7 @@ def add_vehicle(request):
                     error = "yes"
         else:
             space=True
-    d = {'error': error, 'category1': category1,'exist':exist,'space':space}
+    d = {'error': error, 'category1': category1,'exist':exist,'space':space,'mob':mob}
     return render(request, 'parking/add_vehicle.html', d)
 
 
@@ -220,7 +226,7 @@ def manage_incomingvehicle(request):
         return redirect('parking:admin_login')
     if request.user.is_gate==False:
         return redirect('parking:logout')
-    vehicle = Vehicle.objects.filter(status="In")
+    vehicle = Vehicle.objects.filter(status="In",gate=request.user.username)
     d = {'vehicle': vehicle}
     return render(request, 'parking/manage_incomingvehicle.html', d)
 
@@ -254,20 +260,21 @@ def view_incomingdetail(request, pid):
             p=p+current_time-datetime.strptime(vehicle.intime,"%H:%M")
         pc =((p.total_seconds()%3600)// 60)*10
         status = "Out"
-        s=parking_slots.object.filter(user=request.user.id)
-        slot=s.Total_Slots - s.parked
+        s=parking_slots.objects.filter(user=request.user.id)
+        
         try:
-            add_slot=s.parked-1
-            s.parked=add_slot
+            
             vehicle.remark = rm
             vehicle.outtime = out_time
             vehicle.parkingcharge = pc
             vehicle.status = status
             vehicle.save()
-            s.save()
             error = "no"
         except:
             error = "yes"
+        for i in s:
+            i.parked=i.parked-1
+            i.save()
 
     d = {'vehicle': vehicle, 'error': error}
     return render(request, 'parking/view_incomingdetail.html', d)
@@ -322,6 +329,8 @@ def search(request):
         vehicle = ""
     d = {'vehicle': vehicle, 'q': q, 'vehiclecount': vehiclecount}
     return render(request, 'parking/search.html', d)
+
+
 @login_required(login_url='home:login')
 def betweendate_reportdetails(request):
     

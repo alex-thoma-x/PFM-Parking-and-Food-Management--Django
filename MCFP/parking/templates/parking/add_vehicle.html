@@ -106,7 +106,7 @@
 
 </script> -->
 </html>
-{% if not space %}
+{% if space %}
 <script>
   alert('No vehicle Slots Left. REDIRECT the vehicle to other gate');  
   window.location=('{% url 'parking:admin_home' %}');
@@ -117,6 +117,12 @@
 {% if exist == 0 %}
 <script>
     alert('Vehicle with same Registration ALREADY PARKED!!.CONTACT AUTHORITY.');
+    window.location=('{% url 'parking:manage_incomingvehicle' %}');
+</script>
+{% endif %}
+{% if mob %}
+<script>
+    alert('Vehicle with same Mobile Number Has Already Been Parked.');
     window.location=('{% url 'parking:manage_incomingvehicle' %}');
 </script>
 {% endif %}

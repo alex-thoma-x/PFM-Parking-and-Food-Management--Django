@@ -77,11 +77,11 @@ def customerLogin(request):
 		password = request.POST['password']
 		user     = authenticate(username=username,password=password)
 		if user is not None:
-			if user.is_active:
+			if user.is_active and user.is_customer:
 				login(request,user)
 				return redirect('food:restuarant')
 			else:
-				return render(request,'webapp/login.html',{'error_message':'Your account disable'})
+				return render(request,'webapp/login.html',{'error_message':'Your account disable or You are not permitted'})
 		else:
 			return render(request,'webapp/login.html',{'error_message': 'Invalid Login'})
 	return render(request,'webapp/login.html')
@@ -89,7 +89,7 @@ def customerLogin(request):
 
 # customer profile view
 def customerProfile(request,pk=None):
-	if request.user.is_customer==False and request.user.is_superuser==False:
+	if request.user.is_customer==False:
 		return redirect('food:logout')
 	if pk:
 		user = User.objects.get(pk=pk)
@@ -101,7 +101,7 @@ def customerProfile(request,pk=None):
 
 #Create customer profile 
 def createCustomer(request):
-	if request.user.is_customer==False and request.user.is_superuser==False:
+	if request.user.is_customer==False:
 		return redirect('food:logout')
 	form = CustomerForm(request.POST or None)
 	if form.is_valid():
@@ -119,7 +119,7 @@ def createCustomer(request):
 #  Update customer detail
 @login_required(login_url='food:index')
 def updateCustomer(request,id):
-	if request.user.is_customer==False and request.user.is_superuser==False:
+	if request.user.is_customer==False:
 		return redirect('parking:logout')
 	form  	 = CustomerForm(request.POST or None,instance=request.user.customer)
 	if form.is_valid():
@@ -134,7 +134,7 @@ def updateCustomer(request,id):
 @csrf_exempt
 @login_required(login_url='food:login')
 def restuarantMenu(request,pk=None):
-	if request.user.is_customer==False and request.user.is_superuser==False:
+	if request.user.is_customer==False:
 		return redirect('food:logout')
 
 	menu = Menu.objects.filter(r_id=pk)
@@ -167,7 +167,7 @@ def restuarantMenu(request,pk=None):
 
 @login_required(login_url='/login/user/')
 def checkout(request):
-	if request.user.is_customer==False and request.user.is_superuser==False:
+	if request.user.is_customer==False:
 		return redirect('food:logout')
 	if request.POST:
 		addr  = request.POST['address']
@@ -244,11 +244,12 @@ def restLogin(request):
 		password = request.POST['password']
 		user     = authenticate(username=username,password=password)
 		if user is not None:
-			if user.is_active:
+			if user.is_active and user.is_restaurant:
 				login(request,user)
 				return redirect("food:rprofile")
+			
 			else:
-				return render(request,'webapp/restlogin.html',{'error_message':'Your account disable'})
+				return render(request,'webapp/restlogin.html',{'error_message':'Your account disable or You are not permitted'})
 		else:
 			return render(request,'webapp/restlogin.html',{'error_message': 'Invalid Login'})
 	return render(request,'webapp/restlogin.html')
@@ -257,7 +258,7 @@ def restLogin(request):
 # restaurant profile view
 @login_required(login_url='/login/restaurant/')
 def restaurantProfile(request,pk=None):
-	if request.user.is_restaurant==False and request.user.is_superuser==False:
+	if request.user.is_restaurant==False:
 		return redirect('food:logout')
 	if pk:
 		user = User.objects.get(pk=pk)
@@ -269,7 +270,7 @@ def restaurantProfile(request,pk=None):
 # create restaurant detail
 @login_required(login_url='/login/restaurant/')
 def createRestaurant(request):
-	if request.user.is_restaurant==False and request.user.is_superuser==False:
+	if request.user.is_restaurant==False:
 		return redirect('food:logout')
 	form=RestuarantForm(request.POST or None,request.FILES or None)
 	if form.is_valid():
@@ -286,7 +287,7 @@ def createRestaurant(request):
 #Update restaurant detail
 @login_required(login_url='/login/restaurant/')
 def updateRestaurant(request,id):
-	if request.user.is_restaurant==False and request.user.is_superuser==False:
+	if request.user.is_restaurant==False :
 		return redirect('food:logout')
 	form  	 = RestuarantForm(request.POST or None,request.FILES or None,instance=request.user.restaurant)
 	if form.is_valid():
@@ -301,7 +302,7 @@ def updateRestaurant(request,id):
 #add item for MENU by restaurants
 @login_required(login_url='/login/restaurant/')
 def additem(request):
-	if request.user.is_restaurant==False and request.user.is_superuser==False:
+	if request.user.is_restaurant==False:
 		return redirect('food:logout')
 	err=True
 	if not request.user.is_authenticated:
@@ -335,7 +336,7 @@ def additem(request):
 # add  menu item for restaurant	
 @login_required(login_url='/login/restaurant/')		
 def menuManipulation(request):
-	if request.user.is_restaurant==False and request.user.is_superuser==False:
+	if request.user.is_restaurant==False:
 		return redirect('food:logout')
 	if not request.user.is_authenticated:
 		return redirect("food:rlogin") 
@@ -394,6 +395,8 @@ def menuManipulation(request):
 #Order listiing  for users order of users and its status
 @login_required(login_url='food:login')
 def custorder(request):
+	if request.user.is_customer==False:
+		return redirect('food:logout')
 	orders = Order.objects.filter(orderedBy=request.user.id).order_by('-timestamp')
 	corders = []
 
@@ -454,7 +457,7 @@ def custorder(request):
 
 @login_required(login_url='/login/restaurant/')	
 def orderlist(request):
-	if request.user.is_restaurant==False and request.user.is_superuser==False:
+	if request.user.is_restaurant==False:
 		return redirect('food:logout')
 	if request.POST:
 		oid = request.POST['orderid']

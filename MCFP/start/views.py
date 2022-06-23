@@ -1,6 +1,8 @@
 from django.shortcuts import render, HttpResponse,redirect
 from django.contrib.auth import login, logout, authenticate
 from .models import User
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 # Create your views here.
 
 def home(request):
@@ -25,15 +27,14 @@ def homelogin(request):
         except:
             error = "yes"
         if user.is_gate:
-                    rle=1
-        elif user.is_cctv:
-            rle=2
+            rle=1
+       
         elif user.is_restaurant:
             return render(request, 'webapp/order-list.html')
         elif user.is_customer:
             return render(request, 'webapp/restaurents.html')
         else:
-            return render(request, 'home/adindex.html')
+            return HttpResponseRedirect(reverse('admin:index'))
         print(error)
     d = {'error': error,'role':rle}
     return render(request, 'home/login.html', d)

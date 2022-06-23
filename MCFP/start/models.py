@@ -8,6 +8,14 @@ class User(AbstractUser):
     is_gate=models.BooleanField(default=False)
     is_cctv=models.BooleanField(default=False)
     is_restaurant=models.BooleanField(default=False)
+    class Meta:        
+        verbose_name="All User"
+    
+
+class gatekeepers(User):
+    class Meta:
+        proxy = True
+        verbose_name="GATEkeeper"
 
 # class store(models.Model):
 #     Name=models.CharField(null=False,default='store-x')

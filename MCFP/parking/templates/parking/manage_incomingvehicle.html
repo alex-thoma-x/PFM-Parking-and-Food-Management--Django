@@ -50,7 +50,7 @@ $(document).ready(function() {
     <th>Vehicle Reg No.</th>
     <th>Date</th>
     <th>In Time</th>
-    <th>Action</th>
+    <th>Check-OUT</th>
 </tr>
 </thead>
 
@@ -64,7 +64,7 @@ $(document).ready(function() {
                 <td>{{i.regno}}</td>
                 <td>{{i.pdate}}</td>
                 <td>{{i.intime}}</td>
-                  <td><a href="{% url 'parking:view_incomingdetail' i.id %}" ><i class="fa fa-edit fa-1x"></i></a></td>
+                  <td><a href="{% url 'parking:view_incomingdetail' i.id %}" ><i class="fa fa-arrow-circle-right"></i></a></td>
                 </tr>
 {% endfor %}
 </tbody>

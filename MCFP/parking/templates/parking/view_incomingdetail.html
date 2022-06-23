@@ -119,7 +119,7 @@ $(document).ready(function() {
 {% if error == "no" %}
 <script>
     alert('Vehicle Parking Detail has been updated');
-    window.location=('{% url 'print' vehicle.id %}');
+    window.location=('{% url 'parking:print' vehicle.id %}');
 </script>
 {% endif %}
 {% if error ==  "yes" %}
