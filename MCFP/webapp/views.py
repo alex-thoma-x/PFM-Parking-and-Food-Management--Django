@@ -89,6 +89,8 @@ def customerLogin(request):
 
 # customer profile view
 def customerProfile(request,pk=None):
+	if request.user.is_customer==False and request.user.is_superuser==False:
+		return redirect('food:logout')
 	if pk:
 		user = User.objects.get(pk=pk)
 	else:
@@ -132,6 +134,8 @@ def updateCustomer(request,id):
 @csrf_exempt
 @login_required(login_url='food:login')
 def restuarantMenu(request,pk=None):
+	if request.user.is_customer==False and request.user.is_superuser==False:
+		return redirect('food:logout')
 
 	menu = Menu.objects.filter(r_id=pk)
 	rest = Restaurant.objects.filter(id=pk)
@@ -253,6 +257,8 @@ def restLogin(request):
 # restaurant profile view
 @login_required(login_url='/login/restaurant/')
 def restaurantProfile(request,pk=None):
+	if request.user.is_restaurant==False and request.user.is_superuser==False:
+		return redirect('food:logout')
 	if pk:
 		user = User.objects.get(pk=pk)
 	else:

@@ -28,8 +28,8 @@ class CustomUserAdmin(UserAdmin):
         })
     )
 
-    def get_queryset(self, request):
-        return self.model.objects.filter(is_gate = True)
+    # def get_queryset(self, request):
+    #     return self.model.objects.filter(is_gate = True)
 # class (User):
 #     class Meta:
 #         proxy = True

@@ -12,18 +12,18 @@ from start.models import User
 
 class Customer(models.Model):
 	user 		= models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-	f_name   	= models.CharField(max_length=20,blank=False)
-	l_name		= models.CharField(max_length=20,blank=False)
+	f_name   	= models.CharField(max_length=20,blank=False,verbose_name='First Name')
+	l_name		= models.CharField(max_length=20,blank=False,verbose_name='Last Name')
 	# city  		= models.CharField(max_length=40,blank=False)
-	phone 		= models.IntegerField(blank=False,unique=True)
+	phone 		= models.IntegerField(blank=False,unique=True,verbose_name='Mobile')
 	
 	def __str__(self):
 		return self.user.username
 	
 class Restaurant(models.Model):
 	user        = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-	rname 		= models.CharField(max_length=100,blank=False)
-	info	 	= models.CharField(max_length=40,blank=False)
+	rname 		= models.CharField(max_length=100,blank=False,verbose_name='Restaurant')
+	info	 	= models.CharField(max_length=40,blank=False,verbose_name='Restaurant Info')
 	# min_ord		= models.CharField(max_length=5,blank=False)
 	location    = models.CharField(max_length=40,blank=False,unique=True)
 	r_logo      = models.FileField(blank=False)
@@ -42,9 +42,9 @@ class Restaurant(models.Model):
 		
 class Item(models.Model):
 	id 			= models.AutoField(primary_key=True)
-	fname 		= models.CharField(max_length=30,blank=False,unique=True)
+	fname 		= models.CharField(max_length=30,blank=False,unique=True,verbose_name='Item')
 	category 	= models.CharField(max_length=50,blank=False)
-	rid			= models.IntegerField(null=False,default=-1)
+	rid			= models.IntegerField(null=False,default=-1,verbose_name='Restaurant')
 	img			=models.ImageField(blank=False)
 
 
@@ -53,8 +53,8 @@ class Item(models.Model):
 
 class Menu(models.Model):
 	id 		 = models.AutoField(primary_key=True)
-	item_id  = models.ForeignKey(Item,on_delete=models.CASCADE)
-	r_id     = models.ForeignKey(Restaurant,on_delete=models.CASCADE)
+	item_id  = models.ForeignKey(Item,on_delete=models.CASCADE,verbose_name='Item Name')
+	r_id     = models.ForeignKey(Restaurant,on_delete=models.CASCADE,verbose_name='Restaurant')
 	price    = models.IntegerField(blank=False)
 	quantity = models.IntegerField(blank=False,default=0)
 
@@ -64,11 +64,11 @@ class Menu(models.Model):
 
 class Order(models.Model):
 	id 				= models.AutoField(primary_key=True)
-	total_amount    = models.IntegerField(default=0)
-	timestamp       = models.DateTimeField(auto_now_add=True)
-	delivery_addr   = models.IntegerField(null=False,blank=True,default=-1)
+	total_amount    = models.IntegerField(default=0,verbose_name='Total Amount')
+	timestamp       = models.DateTimeField(auto_now_add=True,verbose_name='Time')
+	delivery_addr   = models.IntegerField(null=False,blank=True,default=-1,verbose_name='Table Number')
 	orderedBy       = models.ForeignKey(User ,on_delete=models.CASCADE)
-	r_id			= models.ForeignKey(Restaurant ,on_delete=models.CASCADE)
+	r_id			= models.ForeignKey(Restaurant ,on_delete=models.CASCADE,verbose_name='Restaurant')
 	# pay_status		=models.BooleanField(null=False,default=False)
 	
 	

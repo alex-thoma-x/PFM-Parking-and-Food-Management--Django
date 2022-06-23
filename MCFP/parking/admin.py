@@ -1,6 +1,7 @@
 from django.contrib import admin
 from .models import Category,Vehicle,parking_slots
 
+
 # Register your models here.
 
 
@@ -10,6 +11,16 @@ from .models import Category,Vehicle,parking_slots
 
 #     list_filter=('User',get_queryset,)
 
+class park(admin.ModelAdmin):
+    list_display = (
+        'user', 'Total_Slots', 'parked',
+        )
+
+class vehicle(admin.ModelAdmin):
+    list_display = (
+        'regno', 'pdate', 'ownercontact','status','gate'
+        )
+
 admin.site.register(Category)
-admin.site.register(Vehicle)
-admin.site.register(parking_slots)
+admin.site.register(Vehicle,vehicle)
+admin.site.register(parking_slots,park)
