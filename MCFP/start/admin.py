@@ -52,6 +52,11 @@ class Myuser(CustomUserAdmin):
             'fields': ( 'is_gate',)
         })
     )
+    def has_delete_permission(self, request, obj=None):
+        return False
+from django.contrib.auth.models import Group
+
+admin.site.unregister(Group)
 
 
 

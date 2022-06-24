@@ -20,6 +20,9 @@
 <style type="text/css">
   .big-banner{
     background-image: url('/static/webapp/images/slide_1.jpg');
+    opacity: 90%;
+    z-index: -1;
+    
   }
   .i-am-center{
     margin-left:26%; max-width: 100%;
@@ -37,46 +40,133 @@
   .footer, .push {
     height: 155px; 
 }
+.navn{
+  width: 1480px;
+  height: 50px;
+  background-color:rgb(0, 0, 0);
+  opacity: 50%;
+  margin: -100px -100px 0px -10px;
+}
+.navn ul{
+  display:flex;
+  text-decoration: none;
+  margin: 5px -10px 0 68%;
+  list-style: none;
+}
+.navn ul li{
+  text-decoration: none;
+  margin:8px 30px 0 0;
+  z-index: 15;
+}
+.navn ul li a{
+  text-decoration: none;
+  font-weight: bold;
+  color: rgb(255, 255, 255);
+}
+.imgnew{
+  width: 80px;
+  height: 80px;
+  float: left;
+  margin: -13px 0 0 30px;
+}
+.navn ul li a:hover{
+  color: rgb(225, 255, 0);
+}.col4ext-light{
+  float: right;
+  margin: 10% -25% 0 0;
+}
+
+.col4ext-light table{
+  border: 5px solid;
+  color: rgb(255, 255, 255);
+  width: 400px;
+  height: 200px;
+}.col4ext-light table  tr{
+  color: rgb(255, 255, 255);
+  border: 5px solid;
+}
+.col4ext-light table  td{
+  color: rgb(255, 255, 255);
+  border: 5px solid;
+  text-align: center;
+}
+.col4ext-light table  th{
+  color: rgb(255, 255, 255);
+  border: 1px solid;
+  text-align: center;
+
+}
+.steps{
+  width: 100%;
+  height:200px;
+}
+.ordersteps{
+  display:flex;
+  margin-left:30px;
+}
+.order1{
+  margin: 0 20px 0 0;
+  padding: 20px;
+  margin-top: 30px;
+  box-shadow: 0 10px 10px 0;
+  border-radius:20px;
+  text-align: center;
+}
+.order1:hover{
+  box-shadow: 0 10px 10px 0;
+  color:aqua;
+}
+.crows{
+  margin-left:20px;
+}
+.rows{
+  display: flex;
+}
+.divimg{
+  margin-right: 50px;
+  margin-left: 10px;
+}
+.divimg img:hover{
+  transform: scale(1.5);
+  border: 1px solid;
+  border-radius: 10px;
+  border-color: yellowgreen;
+}
+.row1,.row2,.row3 {
+  display: flex;
+}
+.rowimgs{
+  margin: 15px 30px 0 30px;
+}
+.rowimgs img{
+  width:300px;
+  height:250px;
+}
+.rowimgs img:hover{
+  transform: scale(1.2);
+}
 </style>
 </head>
 <body>
-	
-    <nav class="navbar navbar-expand-lg navbar-light bg-dark navbar-fixed-top">
-   		 <div class="container-fluid">
-   		 	 <div class="navbar-collapse collapse w-100 dual-collapse2 order-1 order-md-0">
-        <ul class="navbar-nav ml-auto text-center">
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="{% url 'food:restuarant'%}">&nbsp; <strong>For Customer</strong> </a>
-            </li>
-        </ul>
-    </div>
-    <div class="mx-auto my-2 order-0 order-md-1 position-relative">
-        <a class="mx-auto" href="#">
-            <img  src="/static/webapp/images/logo.png" style="height: 80px;" alt="Home" class="rounded-circle img-responsive">
-        </a>
+    <!-- <div class="mx-auto my-2 order-0 order-md-1 position-relative">
+        
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".dual-collapse2">
             <span class="navbar-toggler-icon"></span>
         </button>
-    </div>
-    <div class="navbar-collapse collapse w-100 dual-collapse2 order-2 order-md-2">
-        <ul class="navbar-nav mr-auto text-center">
-            <li class="nav-item">
-                <a class="nav-link text-light" href="{% url 'food:rlogin'%}"> &nbsp;<strong>For Store</strong> </a>
-            </li>
-        </ul>
-    </div>
-    <div class="navbar-collapse collapse w-100 dual-collapse2 order-2 order-md-2">
-      <ul class="navbar-nav mr-auto text-center">
-          <li class="nav-item">
-              <a class="nav-link text-light" href="{% url 'home:staff'%}"> &nbsp;<strong>For staff</strong> </a>
-          </li>
-      </ul>
-  </div>
-</div>
-
-</nav>
+    </div> -->
 
 <div class="jumbotron big-banner" style="height: 500px; width: 100%; padding-top:100px;" >
+  <div class="navn">
+    <a class="mx-auto" href="#">
+      <img  src="/static/webapp/images/logo.png"  alt="Home" class="imgnew">
+  </a>
+    <ul>
+      <li><a class="" href="{% url 'food:restuarant'%}">&nbsp; <strong>For Customer</strong> </a></li>
+      <li><a class="" href="{% url 'food:rlogin'%}"> &nbsp;<strong>For Store</strong> </a></li>
+      <li><a class="" href="{% url 'home:staff'%}"> &nbsp;<strong>For Gatekeepers</strong> </a></li>
+    </ul>
+  </div>
+ 
 	<div class="container">
 		<div class="row">
 			<div class="col">
@@ -89,23 +179,23 @@
       <button type="button" class="btn btn-success btn-lg"><strong><a href="{% url 'food:register'%}" class="text-light">Register</a></strong></button>
 			</div>
         <div class="col">
-           <div class="col4 text-light">
-             <table>
-               <tr>
-               <th>Gate</th>
-               <th>Slots Available</th>
-               </tr>
+           <div class="col4ext-light">
+              <table>
+                <tr>
+                  <th>Gate</th>
+                  <th>Slots Available</th>
+                </tr>
             
-             {% if slots %}
-             {% for i in slots %}
-             <tr>
-               {% with x=i.Total_Slots %}
-               {% with y=i.parked %}
-             <td>{{i.user.username}}</td>
-             <td>{{x|sub:y}}</td>
+                {% if slots %}
+                {% for i in slots %}
+              <tr>
+                {% with x=i.Total_Slots %}
+                {% with y=i.parked %}
+                <td>{{i.user.username}}</td>
+                <td>{{x|sub:y}}</td>
              {% endwith %}
              {% endwith %}
-             </tr>
+              </tr>
              {% endfor %}
              {% endif %}
 
@@ -131,34 +221,22 @@
 						<h4>Just 4 steps to follow </h4>
 					</div>
 				</div>
-				<div class="i-am-center">
-				<div class="row ">
-					<div class="col-sm-2 col-md-2">
-						<div class="thumbnail borders text-light">
-							<p>Choose <span>The Store</span></p>
-						</div>
-					</div>
-					<div class="col-sm-2 col-md-2 ">
-						<div class="thumbnail borders text-light">
-						
-							<p>Order  <span>Your Cuisine</span></p>
-						</div>
-					</div>
-					<div class="col-sm-2 col-md-2">
-						<div class="thumbnail borders text-light" >
-							<p>Pay   <span> online </span></p>
-							<label></label>
-						</div>
-					</div>
-					<div class="col-sm-2 col-md-2">
-						<div class="thumbnail borders text-light">
-							<p>Enjoy <span>your food </span></p>
-							<label></label>
-							
-						</div>
-					</div>
-					<div class="clearfix"></div>
-			</div>
+				<div class="steps">
+          <div class="ordersteps">
+            <div class="order1">
+              <h2>Choose the store</h2>
+            </div>
+            <div class="order1">
+              <h2>order your cuisine</h2>
+            </div>
+            <div class="order1">
+              <h2>Pay online</h2>
+            </div>
+            <div class="order1">
+              <h2>Enjoy your food</h2>
+            </div>
+          </div>
+        </div>
 			</div>
 		</div>
 		</div>
@@ -168,148 +246,121 @@
 		<div class="top-restaurent-head">
 						<h3>Top Stores</h3>
 		</div> 
-		<div class="row">
-			 
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/restaurent-2.jpg" class="img-responsive" alt="" />
-                    </a>
-
-                    </div>
-              </div>
-              <br>
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/restaurent-3.jpg" class="img-responsive" alt="" />
-                    </a>
-
-                    </div>
-              </div>
-              <br>
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/restaurent-4.jpg" class="img-responsive" alt="" />
-                    </a>
-
-                    </div>
-              </div>
-              <br>
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/restaurent-5.jpg" class="img-responsive" alt="" />
-                    </a>
-
-                    </div>
-              </div>
-              <br>
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/restaurent-6.jpg" class="img-responsive" alt="" />
-                    </a>
-
-                    </div>
-              </div>
-                    
-		</div>
-
-	</div>
+		<div class="rows">
+      <div class="divimg">
+        <a href="">
+          <img src="/static/webapp/images/restaurent-2.jpg" class="img-responsive" alt="" />
+        </a>
+      </div>
+      <div class="divimg">
+        <a href="">
+          <img src="/static/webapp/images/restaurent-3.jpg" class="img-responsive" alt="" />
+        </a>
+        </div>
+      <div class="divimg">
+        <a href="">
+          <img src="/static/webapp/images/restaurent-4.jpg" class="img-responsive" alt="" />
+        </a>
+      </div>
+      <div class="divimg">
+        <a href="">
+          <img src="/static/webapp/images/restaurent-5.jpg" class="img-responsive" alt="" />
+        </a>
+      </div>
+      <div class="divimg">
+        <a href="">
+          <img src="/static/webapp/images/restaurent-6.jpg" class="img-responsive" alt="" />
+        </a>
+      </div>
+    </div>
 
 <br>
 <br>
-<div class="container col-md-9">
-	<div class="top-cuisine-head">
-			<h3>Top Cuisines</h3>
-	</div>
-	<div class="row">
-		 <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/cuisine1.jpg" class="img-responsive" alt="" />
-                    </a>
-                    </div>
-                    <div class="caption border col-sm-4">
-                    		<h5 class="text-secondary"><strong>Pizza</strong></h5>
-                    </div>
-              </div>
-               <div class="col-md-4 mb-3">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/cuisine2.jpg" class="img-responsive" alt="" />
-                    </a>
-                    </div>
-                    <div class="caption border col-sm-4">
-                    		<h5 class="text-secondary"><strong>Burger</strong></h5>
-                    </div>
-              </div>
-
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/cuisine3.jpg" class="img-responsive" alt="" />
-                    </a>
-                    </div>
-                    <div class="caption border col-sm-6">
-                    		<h5 class="text-secondary"><strong>Dough Nut</strong></h5>
-                    </div>
-              </div>
-               <div class="col-md-4 mb-3">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/cuisine4.jpg" class="img-responsive" alt="" />
-                    </a>
-                    </div>
-                    <div class="caption border col-sm-4">
-                    		<h5 class="text-secondary"><strong>Curry</strong></h5>
-                    </div>
-              </div>
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/cuisine5.jpg" class="img-responsive" alt="" />
-                    </a>
-                    </div>
-                    <div class="caption border col-sm-4">
-                    		<h5 class="text-secondary"><strong>trips</strong></h5>
-                    </div>
-              </div>
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/cuisine6.jpg" class="img-responsive" alt="" />
-                    </a>
-                    </div>
-                    <div class="caption border col-md-6">
-                    		<h5 class="text-secondary"><strong>Frawn Rice</strong></h5>
-                    </div>
-              </div>
-               <div class="col-md-4 ">
-                    <div class="thumbnail">
-                    	<a href="">
-                    	<img src="/static/webapp/images/cuisine7.jpg" class="img-responsive" alt="" />
-                    </a>
-                    </div>
-                    <div class="caption border col-md-4">
-                    		<h5 class="text-secondary"><strong>Fingers</strong></h5>
-                    </div>
-              </div>
-                   <div class="col-md-6 ">
-                    <div class="thumbnail">
-                    	<img src="/static/webapp/images/cuisine8.jpg" class="img-responsive" alt="" />
-                    <div class="caption border col-md-3">
-                        <h5 class="text-secondary"><strong>Cuisine</strong></h5>
-                    </div>
-                    </div>
-                    
-              </div>
-              <div class="clearfix"></div>
-	</div>
+<div class="topqns">
+  <div class="top-cuisine-head">
+    <h3>Top Cuisines</h3>
 </div>
-
+  <div class="crows">
+    <div class="row1">
+      <div class="rowimgs">
+        <a href="">
+          <img src="/static/webapp/images/cuisine1.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Pizza</h4>
+        </div>
+      </div>
+      <div class="rowimgs">
+        <a href="">
+          <img src="/static/webapp/images/cuisine2.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Burger</h4>
+        </div>
+      </div>
+      <div class="rowimgs">
+        <a href="">
+          <img src="/static/webapp/images/cuisine3.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Donut</h4>
+        </div>
+      </div>
+    </div>
+    <div class="row2">
+      <div class="rowimgs">
+        <a href="">
+          <img src="/static/webapp/images/cuisine4.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Curry</h4>
+        </div>
+      </div>
+      <div class="rowimgs">
+        <a href="">
+          <img src="/static/webapp/images/cuisine5.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Broast</h4>
+        </div>
+      </div>
+      <div class="rowimgs">
+        <a href="">
+          <img src="/static/webapp/images/cuisine6.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Frawn Rice</h4>
+        </div>
+      </div>
+    </div>
+    <div class="row3">
+      <div class="rowimgs">
+        <a href="">
+          <img src="/static/webapp/images/cuisine7.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Trips</h4>
+        </div>
+      </div>
+      <div class="rowimgs">
+        <a>
+          <img src="/static/webapp/images/cuisine8.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Stake</h4>
+        </div>
+      </div>
+      <div class="rowimgs">
+        <a href="">
+          <img src="/static/webapp/images/cuisine3.jpg"/>
+        </a>
+        <div class="imgalt">
+          <h4>Donut</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <br>
 <br>
 <br>
