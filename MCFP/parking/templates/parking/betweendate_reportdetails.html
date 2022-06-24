@@ -69,14 +69,14 @@ $(document).ready(function() {
                     <td>{{i.gate}}</td>
                   <td>
                      {% if i.status == 'In' %}
-                      <a href="{% url 'view_incomingdetail' i.id %}" ><i class="fa fa-eye fa-1x"></i></a>
+                      <a href="{% url 'parking:view_incomingdetail' i.id %}" ><i class="fa fa-eye fa-1x"></i></a>
                       {% endif  %}
 
                       {% if i.status == 'Out' %}
-                      <a href="{% url 'view_outgoingdetail' i.id %}" ><i class="fa fa-eye fa-1x"></i></a>
+                      <a href="{% url 'parking:view_outgoingdetail' i.id %}" ><i class="fa fa-eye fa-1x"></i></a>
                       {% endif  %}
 
-                   | <a href="{% url 'print' i.id %}" ><i class="fa fa-print fa-1x"></i></a>
+                   | <a href="{% url 'parking:print' i.id %}" ><i class="fa fa-print fa-1x"></i></a>
 
                   </td>
                 </tr>

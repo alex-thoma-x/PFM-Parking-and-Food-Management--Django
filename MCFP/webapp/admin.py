@@ -3,14 +3,14 @@ from .models import Customer,Restaurant,Item,Menu,Order,orderItem,User
 
 
 class customer(admin.ModelAdmin):
-    search_fields = ['f_name']
+    search_fields = ['f_name','l_name']
     list_display = (
         'user', 'f_name','l_name', 'phone'
         )
     def has_delete_permission(self, request, obj=None):
         return False
 class restaurant(admin.ModelAdmin):
-    search_fields = ['rname']
+    search_fields = ['rname','info']
     list_display = (
         'user', 'rname','info', 'location'
         )

@@ -191,7 +191,7 @@ def add_vehicle(request):
             
             import datetime
             i = datetime.datetime.now()
-            i=i.date()
+            
 
             status = "In"
             category = Category.objects.get(categoryname=ct)
