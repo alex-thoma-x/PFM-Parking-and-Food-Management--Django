@@ -5,6 +5,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import *
 
 class CustomUserAdmin(UserAdmin):
+    list_filter=['is_gate','is_customer','is_restaurant','is_superuser']
     list_display = (
         'username', 'email', 'first_name', 'last_name',
         )
