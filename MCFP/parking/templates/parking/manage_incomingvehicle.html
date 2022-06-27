@@ -44,8 +44,8 @@ $(document).ready(function() {
 <table class='table table-hover' id = example>
 <thead style = 'background-color : red ; color : white'>
 <tr>
-<th>S.No.</th>
-<th>Number</th>
+<th>Slot.No.</th>
+<!-- <th>Number</th> -->
 <th>Owner Mobile</th>
     <th>Vehicle Reg No.</th>
     <th>Date</th>
@@ -57,9 +57,9 @@ $(document).ready(function() {
 <tbody>
   {% for i in vehicle %}
 <tr>
-                  <td>{{forloop.counter}}</td>
+                  <td>{{i.slot}}</td>
 
-                  <td>{{i.id}}</td>
+                  <!-- <td>{{i.id}}</td> -->
                   <td>{{i.ownercontact}}</td>
                 <td>{{i.regno}}</td>
                 <td>{{i.pdate}}</td>

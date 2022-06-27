@@ -27,13 +27,14 @@ class Vehicle(models.Model):
     id=models.AutoField(primary_key=True)
     gate=models.CharField(null=False,max_length=8,default="main")
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
-    regno = models.CharField(max_length=10,verbose_name='Registration Number')
+    regno = models.CharField(max_length=17,verbose_name='Registration Number')
     ownercontact = models.CharField(max_length=15,verbose_name='Contact')#,unique=True
     pdate = models.DateTimeField(null=False,verbose_name='Parking Date')
     intime = models.CharField(max_length=50)
     outtime = models.CharField(max_length=50)
     parkingcharge = models.CharField(max_length=50)
     status = models.CharField(max_length=20)
+    slot=models.IntegerField(default=-1)
     def __int__(self):
         return self.id
     class Meta:        

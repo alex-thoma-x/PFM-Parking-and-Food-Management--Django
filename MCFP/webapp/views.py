@@ -31,7 +31,8 @@ def restuarent(request):
 	r_object = Restaurant.objects.all()
 	query 	= request.GET.get('q')
 	if query:
-		r_object=Restaurant.objects.filter(Q(rname__icontains=query)).distinct()
+		# r_object=Restaurant.objects.filter(Q(rname__icontains=query)).distinct()
+		r_object=Restaurant.objects.filter(rname__startswith=query).distinct()
 		return render(request,'webapp/restaurents.html',{'r_object':r_object})
 	return render(request,'webapp/restaurents.html',{'r_object':r_object})
 

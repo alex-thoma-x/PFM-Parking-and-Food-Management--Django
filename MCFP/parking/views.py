@@ -9,6 +9,7 @@ from datetime import datetime, timedelta, time
 import random
 from django.contrib.auth.decorators import login_required
 from start.models import User
+import random
 # Create your views here.
 
 def Index(request):
@@ -177,8 +178,20 @@ def add_vehicle(request):
     category1 = Category.objects.all()
     if request.method == "POST":
         if slot!=0:
-
             usr = request.user.username
+            slot_check_list=[i for i in range(1,20)]
+            slot_check_set=set(slot_check_list)
+            slot_value_db=Vehicle.objects.filter(status='In',gate=usr)
+            for i in slot_value_db:
+                if i.slot in slot_check_set:
+                    slot_check_set.remove(i.slot)
+            free_slot=random.choice(tuple(slot_check_set))
+
+            
+            
+            
+
+            
             import time
             t = time.localtime()
             current_time = time.strftime("%H:%M", t)
@@ -187,6 +200,7 @@ def add_vehicle(request):
             rn = request.POST['regno']
             oc = request.POST['ownercontact']
             it = current_time
+            slt=free_slot
             
             
             import datetime
@@ -205,7 +219,7 @@ def add_vehicle(request):
             else:
                 try:
                     Vehicle.objects.create(category=category, regno=rn, ownercontact=oc, pdate=i, intime=it, outtime='',
-                                        parkingcharge='', status=status, gate=usr)
+                                        parkingcharge='', status=status, gate=usr, slot=slt)
                     for i in s:
                         slot=i.Total_Slots-i.parked
                         add_slot=i.parked+1
@@ -258,6 +272,7 @@ def view_incomingdetail(request, pid):
             p=(v2-v1)
             print(p)
             p=p+current_time-datetime.strptime(vehicle.intime,"%H:%M")
+            #Price setting-----------------------------------------------------------------------
         pc =((p.total_seconds()%3600)// 60)*10
         status = "Out"
         s=parking_slots.objects.filter(user=request.user.id)

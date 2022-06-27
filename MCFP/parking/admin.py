@@ -20,7 +20,7 @@ class vehicle(admin.ModelAdmin):
     list_filter = ['status','gate']
     search_fields = ['regno','ownercontact']
     list_display = (
-        'regno', 'pdate', 'ownercontact','status','gate'
+        'regno', 'pdate', 'ownercontact','status','gate','slot'
         )
 
 admin.site.register(Category)
