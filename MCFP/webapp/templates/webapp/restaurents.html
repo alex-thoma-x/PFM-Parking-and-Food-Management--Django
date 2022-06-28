@@ -53,7 +53,8 @@
             <h6 class="text-secondary"><font size="2"><strong>{{rest.info}}</strong></font></h6>
             <!-- <h4><font size="2">Min: &#x20b9; {{rest.min_ord}}</font></h4> -->
           	<h5><font size="3">Status: <strong class="text-success">{{rest.status}}</strong></font></h5>
-
+          
+            <button onclick="popmenu(document.getElementById('{{rest.id}}').id)" class="dropbtn">Items</button>
         </div>
          
     </div>
@@ -67,7 +68,6 @@
   tb.style.display = "none";
   const tbody=document.querySelector(".tabody");
 function checkout(x){ 
-    alert('logged in successfully');
     var url ="{% url 'food:menu' 1 %}"
     document.location.href = url.replace('1', x);
 
@@ -75,6 +75,7 @@ function checkout(x){
 
   function popmenu(x){
     console.log(x);
+    
     
     fetch("/food/popmenu",{
                     body: JSON.stringify({rid:x}),
