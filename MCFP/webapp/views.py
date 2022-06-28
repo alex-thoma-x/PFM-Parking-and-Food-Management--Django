@@ -10,6 +10,9 @@ from start.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from parking.models import parking_slots
+import json
+from django.http import JsonResponse
+
 
 #### ---------- General Side -------------------#####
 
@@ -32,10 +35,33 @@ def restuarent(request):
 	query 	= request.GET.get('q')
 	if query:
 		# r_object=Restaurant.objects.filter(Q(rname__icontains=query)).distinct()
-		r_object=Restaurant.objects.filter(rname__startswith=query).distinct()
+		item=Item.objects.filter(fname__startswith=query).values_list('rid', flat=True)
+		
+		if item.count()!=0:
+			r_object=Restaurant.objects.filter(id__in=item).distinct()
+		else:
+		# r_object=Restaurant.objects.filter(Q(rname__icontains=query)).distinct()
+			r_object=Restaurant.objects.filter(rname__startswith=query).distinct()
 		return render(request,'webapp/restaurents.html',{'r_object':r_object})
 	return render(request,'webapp/restaurents.html',{'r_object':r_object})
 
+
+#popmenu in restaurant list for customers
+def popmenu(request):
+	if request.method == 'POST':
+		rid=json.loads(request.body).get('rid')
+		menu = Menu.objects.filter(r_id=rid).values_list('item_id', flat=True)
+		
+		item = Item.objects.filter(id__in=menu)
+		data=item.values()
+			
+		for y in list(data):
+			m=Menu.objects.filter(item_id=y['id'])
+			y['price']=m[0].price
+			
+
+				
+		return JsonResponse(list(data), safe=False)
 
 # logout
 def Logout(request):

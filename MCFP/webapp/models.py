@@ -22,10 +22,10 @@ class Customer(models.Model):
 	
 class Restaurant(models.Model):
 	user        = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-	rname 		= models.CharField(max_length=100,blank=False,verbose_name='Restaurant')
+	rname 		= models.CharField(max_length=20,blank=False,verbose_name='Restaurant')
 	info	 	= models.CharField(max_length=40,blank=False,verbose_name='Restaurant Info')
 	# min_ord		= models.CharField(max_length=5,blank=False)
-	location    = models.CharField(max_length=40,blank=False,unique=True)
+	location    = models.CharField(max_length=10,blank=False,unique=True)
 	r_logo      = models.FileField(blank=False)
 
 	REST_STATE_OPEN    = "Open"

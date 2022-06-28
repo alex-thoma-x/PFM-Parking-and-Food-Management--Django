@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from django.views.decorators.csrf import csrf_exempt
 app_name='food'
 
 urlpatterns = [
@@ -25,6 +25,7 @@ urlpatterns = [
     path('restaurant/item/',views.additem,name='item'),
     path('logout/',views.Logout,name='logout'),
     path('restaurant/<int:pk>/',views.restuarantMenu,name='menu'),
+    path('popmenu', csrf_exempt(views.popmenu),name='popmenu'),
     path('checkout/',views.checkout,name='checkout'),
     path('custorder/',views.custorder,name='custorder'),
 
