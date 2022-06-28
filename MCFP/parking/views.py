@@ -10,6 +10,7 @@ import random
 from django.contrib.auth.decorators import login_required
 from start.models import User
 import random
+import pytz
 # Create your views here.
 
 def Index(request):
@@ -50,17 +51,17 @@ def admin_home(request):
     if request.user.is_gate==False:
         return redirect('parking:logout')
     today = datetime.now().date()
+    
     yesterday = today - timedelta(1)
+    yesterday_max=datetime.combine(yesterday, time.max)
     lasts = today - timedelta(7)
 
     s=parking_slots.objects.filter(user=request.user.id)
-    print(s)
     for i in s:
-        slot=i.Total_Slots-i.parked
-    
-    tv = Vehicle.objects.filter(pdate=today).count()
-    yv = Vehicle.objects.filter(pdate=yesterday,gate=request.user.username).count()
-    g = Vehicle.objects.filter(pdate=today, gate=request.user.username).count()
+        slot=i.Total_Slots-i.parked      
+    tv = Vehicle.objects.filter(pdate__date__range=(today, datetime.now(pytz.timezone('Indian/Mahe')))).count()
+    yv = Vehicle.objects.filter(pdate__date__range=(yesterday,yesterday_max),gate=request.user.username).count()
+    g = Vehicle.objects.filter(pdate__date__range=(today, datetime.now(pytz.timezone('Indian/Mahe'))), gate=request.user.username).count()
     ls = Vehicle.objects.filter(pdate__gte=lasts, pdate__lte=today,gate=request.user.username).count()
     totalv = Vehicle.objects.all().count()
 
@@ -204,7 +205,7 @@ def add_vehicle(request):
             
             
             import datetime
-            i = datetime.datetime.now()
+            i = datetime.datetime.now(pytz.timezone('Indian/Mahe'))
             
 
             status = "In"
