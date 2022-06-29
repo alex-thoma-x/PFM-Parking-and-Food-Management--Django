@@ -27,9 +27,7 @@
    		 <div class="container">
    		 	 <div class="navbar-collapse collapse w-100 dual-collapse2 order-1 order-md-0">
         <ul class="navbar-nav ml-auto text-center">
-            <li class="nav-item active">
-                <a class="nav-link text-light" href="{% url 'food:index' %}"><font size="3">&nbsp; <strong>Home</strong> </font></a>
-            </li>
+            
             <li class="nav-item">
                 <a class="nav-link text-light" href="{% url 'food:restuarant' %}"><font size="3">&nbsp;<strong>Store</strong></font></a>
             </li>
@@ -57,6 +55,9 @@
                 <a class="nav-link text-light" href="{% url 'food:custorder' %}"><font size="3"> &nbsp;<span aria-hidden="true"></span><strong>orders</strong></font></a>
             </li>
           {% else %}
+            <li class="nav-item active">
+                <a class="nav-link text-light" href="{% url 'food:index' %}"><font size="3">&nbsp; <strong>Home</strong> </font></a>
+            </li>
             <li class="nav-item">
                 <a class="nav-link text-light" href="{% url 'food:login' %}"><font size="3">&nbsp;<span aria-hidden="true"></span> <strong>LogIn</strong></font></a>
             </li>

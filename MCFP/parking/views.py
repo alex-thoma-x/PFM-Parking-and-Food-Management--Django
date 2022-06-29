@@ -58,14 +58,29 @@ def admin_home(request):
 
     s=parking_slots.objects.filter(user=request.user.id)
     for i in s:
-        slot=i.Total_Slots-i.parked      
+        slots=i.Total_Slots-i.parked
+    print(slots)     
     tv = Vehicle.objects.filter(pdate__date__range=(today, datetime.now(pytz.timezone('Indian/Mahe')))).count()
     yv = Vehicle.objects.filter(pdate__date__range=(yesterday,yesterday_max),gate=request.user.username).count()
     g = Vehicle.objects.filter(pdate__date__range=(today, datetime.now(pytz.timezone('Indian/Mahe'))), gate=request.user.username).count()
     ls = Vehicle.objects.filter(pdate__gte=lasts, pdate__lte=today,gate=request.user.username).count()
     totalv = Vehicle.objects.all().count()
 
-    d = {'tv': tv, 'yv': yv, 'ls': ls, 'totalv': totalv, 'g': g,'slot':slot}
+    usr=request.user.username
+    slot_set=slotcheck(usr)
+    print(slot_set)
+    slot=[False]*20
+    for i in range(20):
+        if i+1 in slot_set:
+            slot[i]=True
+    s1=slot[:10]
+    s2=slot[10:]
+    slot1 = dict(enumerate(s1,start=1))
+
+    slot2=dict(enumerate(s2,start=11))
+   
+       
+    d = {'tv': tv, 'yv': yv, 'ls': ls, 'totalv': totalv, 'g': g,'slots':slots,'slot1':slot1.items(),'slot2':slot2.items()}
     return render(request, 'parking/admin_home.html', d)
 
 
@@ -161,9 +176,36 @@ def edit_category(request, pid):
     d = {'error': error, 'category': category}
     return render(request, 'parking/edit_category.html', d)
 
-@login_required(login_url='home:login')
-def add_vehicle(request):
+def slotcheck(usr):
+    slot_check_list=[i for i in range(1,21)]
+    slot_check_set=set(slot_check_list)
+    slot_value_db=Vehicle.objects.filter(status='In',gate=usr)
+    for i in slot_value_db:
+        if i.slot in slot_check_set:
+            slot_check_set.remove(i.slot)
+    return slot_check_set
+
+def parkslot(request):
+    usr=request.user.username
+    slot_set=slotcheck(usr)
+    print(slot_set)
+    slot=[False]*20
+    for i in range(20):
+        if i+1 in slot_set:
+            slot[i]=True
+    s1=slot[:10]
+    s2=slot[10:]
+    slot1 = dict(enumerate(s1,start=1))
+
+    slot2=dict(enumerate(s2,start=11))
+   
+    print(slot1,slot2)
+    d={'slot1':slot1.items(),'slot2':slot2.items()}
+    return render(request, 'parking/slots.html', d)
     
+
+@login_required(login_url='home:login')
+def add_vehicle(request):        
     if not request.user.is_authenticated:
         return redirect('parking:admin_login')
     if request.user.is_gate==False:
@@ -180,19 +222,9 @@ def add_vehicle(request):
     if request.method == "POST":
         if slot!=0:
             usr = request.user.username
-            slot_check_list=[i for i in range(1,20)]
-            slot_check_set=set(slot_check_list)
-            slot_value_db=Vehicle.objects.filter(status='In',gate=usr)
-            for i in slot_value_db:
-                if i.slot in slot_check_set:
-                    slot_check_set.remove(i.slot)
-            free_slot=random.choice(tuple(slot_check_set))
+            slot_check_set=slotcheck(usr)
+            free_slot=random.choice(tuple(slot_check_set))                   
 
-            
-            
-            
-
-            
             import time
             t = time.localtime()
             current_time = time.strftime("%H:%M", t)
