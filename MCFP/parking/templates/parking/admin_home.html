@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
 <!-- Vendor CSS Files -->
 <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'vendor/popup.css' %}" rel="stylesheet">
 <link href="{% static 'vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
 <link href="{% static 'vendor/boxicons/css/boxicons.min.css' %}" rel="stylesheet">
 <link href="{% static 'vendor/quill/quill.snow.css' %}" rel="stylesheet">
@@ -60,6 +61,22 @@ border-radius:8px;
 h2, h4{
  padding:10Px;
 }
+.popupdiv {
+                display: none;
+                position: fixed; /* Stay in place */
+                z-index: 1; /* Sit on top */
+                padding-top: 100px; /* Location of the box */
+                left: 0;
+                top: 0;
+                width: 100%; /* Full width */
+                height: 100%; /* Full height */
+                overflow: auto; /* Enable scroll if needed */
+                background-color: rgb(0,0,0); /* Fallback color */
+                background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            }
+            .divimg{
+                background-color: black;
+            }
 
 </style>
 
@@ -68,125 +85,295 @@ h2, h4{
 </head>
 <body>
 {% include 'parking/nav2admin.html' %}
-<br> &nbsp;&nbsp;Welcome <b style = 'text-transform : capitalize ; color : blue'>{{request.user.username}}</b>
+<br> <h2>&nbsp;&nbsp;Welcome <b style = 'text-transform : capitalize ; color : rgb(16, 139, 67)'>{{request.user.username}}</h2></b>
 
 
-<div class="container" style = "margin-top:10px">
+<div class="container" style = "margin-top:110px">
 
-  <div class="container" style = "width:120%;">
-  <div class="col-md-12">
-
-    <div class="row">
-        {% for key, value in slot1 %}
-        <div class="col" style="padding: 0%;">
+  <div class="container" style = "width:100%;">
+    <div class="popupdiv" id="userpopup">
+      <div class="popup">
         
-            <div class="col col-md-3" style="padding: 0%;">
-            {% if value %}
-                <button type="button" class="btn btn-success mb-2">
-                    Available <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
-                  </button>
-            {% else %}
-                  <button type="button" class="btn btn-danger mb-2">
-                    Equipped<span class="badge bg-white text-success"><i class="bi bi-check-circle me-1"></i>{{key}}</span>
-                    </button>
-            {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-
-        
-    </div>
-    <div class="row">
-            <!-- <button class="btn btn-light">
-                <div class="progress mt-3">
-                    <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-            </button> -->
-            <button class="btn btn-light" style="padding-top: 0%;" >
-                <div class="progress mt-3" style="padding-bottom: 0%;" >
-                    <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                  </div>
-            </button>
-    </div>
-    <div class="row">
-        {% for key, value in slot2 %}
-        <div class="col" style="padding: 0%;">
-            
-            <div class="col col-md-2" style="padding: 0%;">
-                {% if value  %}
-                    <button type="button" class="btn btn-success mb-2">
-                        Available <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
-                      </button>
-                    {% else %}
-                      <button type="button" class="btn btn-danger mb-2">
-                        Equipped<span class="badge bg-white text-success"><i class="bi bi-check-circle me-1"></i>{{key}}</span>
+        <div class="col-sm-12">
+          
+          <div class="row">
+              {% for key, value in slot1 %}
+              <div class="col" style="padding: 0%;">
+              
+                  <div class="col col-md-3" style="padding: 0%;">
+                  {% if value %}
+                      <button type="button" class="btn btn-success mb-2">
+                          Available <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
                         </button>
-                        {% endif %}
-                </div>
-        </div>
-        {% endfor %}
-
-        
+                  {% else %}
+                        <button type="button" class="btn btn-danger mb-2">
+                          Equipped<span class="badge bg-white text-success"><i class="bi bi-check-circle me-1"></i>{{key}}</span>
+                          </button>
+                  {% endif %}
+                  </div>
+              </div>
+              {% endfor %}
+      
+              
+          </div>
+          <div class="row">
+                   <button class="btn btn-light">
+                      <div class="progress mt-3">
+                          <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                  </button> 
+                  <!-- <button class="btn btn-light" style="padding-top: 0%;" >
+                      <div class="progress mt-3" style="padding-bottom: 0%;" >
+                          <div class="progress-bar progress-bar-striped bg-secondary" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                  </button> -->
+          </div>
+          <div class="row">
+              {% for key, value in slot2 %}
+              <div class="col" style="padding: 0%;">
+                  
+                  <div class="col col-md-1" style="padding: 0%;">
+                      {% if value  %}
+                          <button type="button" class="btn btn-success mb-2">
+                              Available <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
+                            </button>
+                          {% else %}
+                            <button type="button" class="btn btn-danger mb-2">
+                              Equipped<span class="badge bg-white text-success"><i class="bi bi-check-circle me-1"></i>{{key}}</span>
+                              </button>
+                              {% endif %}
+                    </div>
+              </div>
+              {% endfor %}
+      
+          </div>
+          
+          </div>
+          <a class="close" href="javascript:close()">&times;</a>
+      </div>
 
     </div>
-    
-    </div>
+  
+    <!-- <div class="popupdiv" id="userpopup">
+      <div class="popup">
 
-
-
-
-
-
-
-
+          <a class="close" href="javascript:close()">&times;</a>
+          <div class="content">
+                  <div class="col-sm-6">
+                      <a style="width: 100%" class="btn btn-success" href="/accept_invite_con/{{i.id}}/{{i.Customer_id}}/{{id}}" onclick="return acceptbtn();">Accept</a>
+                  </div>
+                  <div class="col-sm-6">
+                      <a style="width: 100%" class="btn btn-danger" href="/reject_invite_con/{{i.id}}/{{i.Customer_id}}/{{id}}" onclick="return rejectbtn();">Reject</a>
+                  </div>
+          </div>
+      </div>
+  </div> -->
 
 <div class = "row">
-<div class = "col-sm-3 mydivstyle">
-<!--<h2 style = "color : blue ; font-weight : bold ; text-align : center">Add Vehicle</h2>-->
-    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center"><a href="{% url 'parking:add_vehicle' %}">Add Vehicle</a> <i class="fa fa-car"></i></h3>
-</div>
+<!-- Sales Card -->
 
-<div class = "col-sm-3 mydivstyle" >
-  <h2 style = "color : blue ; font-weight : bold ; text-align : center">SLOTS LEFT</h2>
-  <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{slots}} <i class="fa fa-car"></i></h3>
+<div class="col-xxl-4 col-md-6">
+  <div class="card info-card sales-card" style = " background: hsl(113, 60%, 85%); ">
+
+    <div class="filter">
+      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <li class="dropdown-header text-start">
+          <h6><i class="fa fa-car"></i></h6>
+        </li>
+        <li><a class="dropdown-item" href="{% url 'parking:add_category' %}">Add Category</a></li>
+        <li><a class="dropdown-item" href="{% url 'parking:betweendate_report' %}">Get Report</a></li>
+      </ul>
+    </div>
+
+    <div class="card-body">
+      <h5 class="card-title"><a href="{% url 'parking:add_vehicle' %}">Add Vehicle</a></h5>
+
+      <div class="d-flex align-items-center">
+        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+          <!-- <i class="bi bi-cart"></i> -->
+        </div>
+        <div class="ps-3">
+          <h6><a href="{% url 'parking:add_vehicle' %}"><i class="fa fa-car"></i></a></h6>
+          <span class="text-success small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+
+        </div>
+      </div>
+    </div>
+
   </div>
 
-<div class = "col-sm-3 mydivstyle">
-<!--<h2 style = "color : blue ; font-weight : bold ; text-align : center">Add Vehicle</h2>-->
-    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center"><a href="{% url 'parking:manage_incomingvehicle' %}">Check Out Vehicle</a> <i class="fa fa-car"></i></h3>
 </div>
+<!-- End Sales Card -->
 
+<div class="col-xxl-4 col-md-6">
+  <div class="card info-card sales-card" style = " background: hsl(113, 60%, 85%); ">
 
-<div class = "col-sm-3 mydivstyle" >
-<h2 style = "color : blue ; font-weight : bold ; text-align : center">Todays Total  Vehicle Entries</h2>
-<h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{tv}} <i class="fa fa-car"></i></h3>
+    <div class="filter">
+      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+      <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+        <li class="dropdown-header text-start">
+          <h6><i class="fa fa-car"></i></h6>
+        </li>
+        <li><a class="dropdown-item" href="{% url 'parking:manage_outgoingvehicle' %}">OUT Vehicles</a></li>
+        <li><a class="dropdown-item" href="{% url 'parking:betweendate_report' %}">Get Report</a></li>
+      </ul>
+    </div>
+
+    <div class="card-body">
+      <h5 class="card-title"><a href="{% url 'parking:manage_incomingvehicle' %}">Check OUT Vehicle</a></h5>
+
+      <div class="d-flex align-items-center">
+        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+          <!-- <i class="bi bi-cart"></i> -->
+        </div>
+        <div class="ps-3">
+          <h6><a href="{% url 'parking:manage_incomingvehicle' %}"><i class="fa fa-car"></i></a></h6>
+          <span class="text-success small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
+<!-- End Sales Card -->
 
 
-    <div class = "col-sm-3 mydivstyle">
-<h2 style = "color : blue ; font-weight : bold ; text-align : center">Todays {{request.user.username}}  Vehicle </br>Entries</h2>
-    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{g}} <i class="fa fa-car"></i></h3>
+
+<div class="col-xxl-4 col-md-6" onclick="popup();">
+  <div class="card info-card sales-card" style = " background: hsl(113, 60%, 85%); ">
+
+    <div class="filter">
+      <a class="icon" href="#" data-bs-toggle="dropdown"><i class="fas fa-parking"> Click to see Slots!</i></a>
+      
+
+    <div class="card-body">
+      <h5 class="card-title" style = " font-weight : bold ; ">Slots Free </h5>
+
+      <div class="d-flex align-items-center">
+        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+          <!-- <i class="bi bi-cart"></i> -->
+        </div>
+        <div class="ps-3">
+          <h4 style = "color : rgb(39, 3, 124) ; font-weight : bold ; text-align : center">{{slots}}</h4>
+            
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 </div>
+<!-- End Sales Card -->
+
+           
+  </div>
+  <!-- End ot Row 1 -->
 
 
-<div class = "col-sm-3 mydivstyle">
-<h2 style = "color : blue ; font-weight : bold ; text-align : center">Yesterdays {{request.user.username}} Vehicle Entries</h2>
-    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{yv}} <i class="fa fa-car"></i></h3>
-</div>
+  
+<div class = "row">
+  <!-- Sales Card -->
+  
+  <div class="col-xxl-4 col-md-6">
+    <div class="card info-card sales-card" style = " background: hsl(204, 59%, 81%); ">
+  
+      <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="fas fa-parking"></i></a>
+        
+        
+      </div>
+  
+      <div class="card-body">
+        <h5 class="card-title" style = " font-weight : bold ;color : rgb(0, 0, 0)'; ">Today {{request.user.username}} cars</h5>
+  
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <!-- <i class="bi bi-cart"></i> -->
+          </div>
+          <div class="ps-3">
+            <h6><a href="#"><i class="fa fa-car">  {{g}}</i></a></h6>
+            <span class="text-success small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+  
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  
+  </div>
+  <!-- End Sales Card -->
+  
+  <div class="col-xxl-4 col-md-6" >
+    <div class="card info-card sales-card" style = " background: hsl(204, 59%, 81%); ">
+  
+      <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="fas fa-parking">!</i></a>
+        
+  
+      <div class="card-body">
+        <h4 class="card-title" style = " font-weight : bold ; "> Today's Total Cars </h4>
+  
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <!-- <i class="bi bi-cart"></i> -->
+          </div>
+          <div class="ps-3">
+            <h6><a href="#"><i class="fa fa-car">  {{tv}}</i></a></h6>
+            <span class="text-success small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+              
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  
+  </div>
+  <!-- End Sales Card -->
+  
+            
+  </div>
+  
+  
+  
+  <div class="col-xxl-4 col-md-6" >
+    <div class="card info-card sales-card" style = " background: hsl(204, 59%, 81%); ">
+  
+      <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="fas fa-parking"></i></a>
+        
+  
+      <div class="card-body">
+        <h5 class="card-title" style = " font-weight : bold ; ">Last 7 Days Cars </h5>
+  
+        <div class="d-flex align-items-center">
+          <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+            <!-- <i class="bi bi-cart"></i> -->
+          </div>
+          <div class="ps-3">
+            <h6><a href="#"><i class="fa fa-car">  {{ls}}</i></a></h6>
+            <span class="text-success small pt-1 fw-bold"></span> <span class="text-muted small pt-2 ps-1"></span>
+              
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  
+  </div>
+  <!-- End Sales Card -->
+  
+            
+  </div>
+    </div>
+    <!-- End ot Row -->
 
-    <div class = "col-sm-3 mydivstyle" >
-<h2 style = "color : blue ; font-weight : bold ; text-align : center">Last 7 days {{request.user.username}} Vehicle Entries</h2>
-<h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{ls}} <i class="fa fa-car"></i></h3>
-</div>
 
 
-<div class = "col-sm-3 mydivstyle">
-<h2 style = "color : blue ; font-weight : bold ; text-align : center">Total Vehicle </br>Entries</h2>
-    <h3 class= "mt-3" style = "color : green ; font-weight : bold ; text-align : center">{{totalv}} <i class="fa fa-car"></i></h3>
-</div>
 
-</div>
-</div>
+
 
 <footer class="container pt-5 mt-5 text-center">
 
@@ -205,6 +392,18 @@ h2, h4{
 
 
 </body>
+<script>
+
+$('.btn-view').click(function(){
+                document.getElementById("userpopup").style.display = "block";
+            });
+            function close() {
+            document.getElementById("userpopup").style.display = "none";
+            }
+function popup(){
+  document.getElementById("userpopup").style.display = "block";
+}
+</script>
 </html>
 <?php
 function totalsubjects()

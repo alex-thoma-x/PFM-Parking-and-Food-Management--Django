@@ -1,0 +1,49 @@
+
+  
+  .popup {
+    margin: 70px auto;
+    padding: 20px;
+    background: rgb(255, 255, 255);
+    text-align: center;
+    border-radius: 0;
+    border: 5px solid #000000;
+    width: 70%;
+    height: 40%;
+    position: relative;
+    transition: all 5s ease-in-out;
+  }
+  
+  
+  .popup .close {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    transition: all 20ms;
+    font-size: 30px;
+    font-weight: bold;
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+  }
+  .popup .close:hover {
+    color: #080808;
+  }
+  .popup .content {
+    width: 100%;
+    overflow: auto;
+  }
+
+  a {
+    text-decoration: none;
+    font-size: 22px;
+    color: black;
+    }
+
+  
+  @media screen and (max-width: 700px){
+    .box{
+      width: 70%;
+    }
+    .popup{
+      width: 70%;
+    }
+  }
