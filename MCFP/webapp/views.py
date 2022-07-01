@@ -1,11 +1,11 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login,logout
-from .forms import CustomerSignUpForm,RestuarantSignUpForm,CustomerForm,RestuarantForm, itemadd
+from .forms import CustomerSignUpForm,RestuarantSignUpForm,CustomerForm,RestuarantForm, feedback, itemadd
 from django.contrib.auth.decorators import login_required
 from collections import Counter
 from django.urls import reverse
 from django.db.models import Q
-from .models import Customer,Restaurant,Item,Menu,Order,orderItem
+from .models import  *
 from start.models import User
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -13,6 +13,7 @@ from parking.models import parking_slots
 import json
 from django.http import JsonResponse
 from parking.models import Vehicle
+from parking.views import slotcheck
 
 
 
@@ -131,22 +132,26 @@ def customerProfile(request,pk=None):
 	return render(request,'webapp/profile.html',{'user':user,'gate':gate})
 
 
-
-
+#to find the parking slot of the registered user
+@login_required(login_url='food:index')
 def parkslot(request):
 	user=request.user
 	vehicle=Vehicle.objects.filter(ownercontact=user.customer.phone,status='In')	
 	if vehicle.count()!=0:
 		slots=vehicle[0].slot
-		print(slots)
 		gate=vehicle[0].gate
-		slot=[False]*20
-		slot[slots-1]=True
+		slot_for_user=slotcheck(gate)
+		slot=[1]*20
+		for i in range(20):
+			if i+1 in slot_for_user:
+				slot[i]=0
+		slot[slots-1]=2
+		print(slot)
 		s1=slot[:10]
 		s2=slot[10:]
 		slot1 = dict(enumerate(s1,start=1))
 		slot2=dict(enumerate(s2,start=11))
-	d={'slot1':slot1.items(),'slot2':slot2.items(),'gate':gate}
+	d={'slot1':slot1.items(),'slot2':slot2.items(),'gate':gate,'slotcheck':1}
 	return render(request, 'parking/slots.html', d)
 
 #Create customer profile 
@@ -258,8 +263,6 @@ def checkout(request):
 			"oid":oid.id
 		}	
 		return render(request,'webapp/order.html',context)
-
-
 
 
 ####### ------------------- Restaurant Side ------------------- #####
@@ -443,6 +446,17 @@ def menuManipulation(request):
 def custorder(request):
 	if request.user.is_customer==False:
 		return redirect('food:logout')
+	if request.method=="POST":
+		feed = request.POST['remark']
+		orderid = int(request.POST['orderid'])
+		rating=int(request.POST['rating'])
+		if feed=='':
+			feed=None
+		p=Order.objects.get(id=orderid)
+		
+		usr=request.user
+		remark=Feedback(customer=usr,remarks=feed,rating=rating,orderid=p)
+		remark.save()
 	orders = Order.objects.filter(orderedBy=request.user.id).order_by('-timestamp')
 	corders = []
 
@@ -468,11 +482,12 @@ def custorder(request):
 			citem.append(menu[0].price*item.quantity)
 			menu = 0
 			items.append(citem)
-			print(items)
 
 		corder.append(items)
 		corder.append(order.total_amount)
 		corder.append(order.id)
+		print(order.id)
+		
 
 		x = order.status
 		if x == Order.ORDER_STATE_WAITING:
@@ -491,12 +506,16 @@ def custorder(request):
 			continue
 
 		corder.append(x)
+		corder.append(order.timestamp)
 		corder.append(order.delivery_addr)
 		corders.append(corder)
-
+	print(corders)
+	
 	context = {
 		"orders" : corders,
+		
 	}
+
 	return render(request,"webapp/custorder.html",context)
 
 @login_required(login_url='/login/restaurant/')	
@@ -551,7 +570,7 @@ def orderlist(request):
 			citem.append(menu[0].price*item.quantity)
 			menu = 0
 			items.append(citem)
-
+		
 		corder.append(items)
 		corder.append(order.total_amount)
 		corder.append(order.id)
@@ -571,9 +590,22 @@ def orderlist(request):
 			x = 5
 		else:
 			continue
-
+		print(order.id)
+		feed=Feedback.objects.filter(orderid=order.id)
+		print(feed.count())
+		
 		corder.append(x)
 		corder.append(order.delivery_addr)
+		if feed.count()!=0:
+			corder.append(feed[0].rating)
+			if feed[0].remarks!=None:
+				corder.append(feed[0].remarks)
+			else:
+				corder.append("No Remark Given")
+
+		else:
+			corder.append("NO Rating given")
+			corder.append("No Remark Given")
 		corders.append(corder)
 
 	context = {

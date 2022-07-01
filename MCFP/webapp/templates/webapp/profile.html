@@ -57,11 +57,12 @@
                                 <div class="row">
                                   <div class="col">
                                   <a class="btn btn-success btn-lg" href="{% url 'food:cupdate' user.id %}">Edit</a>
-                                </div>
-                              
+                                </div>   
+                                {% if gate %}                           
                                 <div class="col">
                                   <a class="btn btn-success btn-lg" href="{% url 'food:custslot' %}">You Car Parked at {{gate}}</a>
                                 </div>
+                                {% endif %}
                                 <!--<div class="col">
                                    <a class="btn btn-success btn-lg" href="{%url 'food:ccreate' %}">Complete profile</a>
                                 </div>-->

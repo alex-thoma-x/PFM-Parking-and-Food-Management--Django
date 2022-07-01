@@ -1,4 +1,6 @@
 from email.policy import default
+from numbers import Rational
+from tkinter import CASCADE
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.conf import settings
@@ -101,6 +103,14 @@ class orderItem(models.Model):
 	
 	def __str__(self):
 		return str(self.id) 
+
+
+class Feedback(models.Model):
+	customer=models.ForeignKey(User,on_delete=models.CASCADE)
+	remarks=models.TextField(max_length=200)
+	rating=models.IntegerField(default=0)
+	orderid=models.ForeignKey(Order,on_delete=models.DO_NOTHING,default=1)
+
 
 
 

@@ -114,13 +114,18 @@
           <div class="col" style="padding: 0%;">
           
               <div class="col col-md-3" style="padding: 0%;">
-              {% if value %}
-                  <button type="button" class="btn btn-success mb-2">
-                      Your Car Parked HERE! <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
-                    </button>
-              {% else %}
+              {% if value == 0 %}
+                    <button type="button" class="btn btn-success mb-2">
+                    Available <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
+                  </button>
+          
+                    {% elif value == 2 %}
+                    <button type="button" class="btn btn-warning mb-2">
+                        Your Car Parked HERE! <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
+                      </button>
+                    {% else %}
                     <button type="button" class="btn btn-danger mb-2">
-                      Slot<span class="badge bg-white text-success"><i class="bi bi-check-circle me-1"></i>{{key}}</span>
+                      Parked<span class="badge bg-white text-success"><i class="bi bi-check-circle me-1"></i>{{key}}</span>
                       </button>
               {% endif %}
               </div>
@@ -146,15 +151,21 @@
           <div class="col" style="padding: 0%;">
               
               <div class="col col-md-2" style="padding: 0%;">
-                  {% if value  %}
+                  {% if value == 0  %}
                       <button type="button" class="btn btn-success mb-2">
-                        Your Car Parked HERE! <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
+                        Available <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
                         </button>
-                      {% else %}
-                        <button type="button" class="btn btn-danger mb-2">
-                          Slot<span class="badge bg-white text-success"><i class="bi bi-check-circle me-1"></i>{{key}}</span>
+                     
+                          {% elif value == 2 %}
+                        <button type="button" class="btn btn-warning mb-2">
+                            Your Car Parked HERE! <span class="badge bg-white text-success"><i class="bi bi-star me-1"></i>{{key}}</span>
                           </button>
-                          {% endif %}
+                          
+                          {% else %}
+                        <button type="button" class="btn btn-danger mb-2">
+                          Parked<span class="badge bg-white text-success"><i class="bi bi-check-circle me-1"></i>{{key}}</span>
+                          </button>
+                          {%  endif %}
                   </div>
           </div>
           {% endfor %}

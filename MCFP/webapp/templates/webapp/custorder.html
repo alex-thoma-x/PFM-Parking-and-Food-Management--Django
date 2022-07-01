@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-md-12 buy"  style="display: inline-block;">
                         <span>Total price: &#x20b9;{{order.3}}</span>
-                        <span  style="display: inline;">Order Status:</span>
+                         <span  style="display: inline;">Order Status:</span>
                             {% if order.5 == 1 %}
                             <span  style="display: inline;">Placed</span>
                             {% endif %}
@@ -48,7 +48,26 @@
                           
                             {% endif %}
                             {% if order.5 == 4 %}
-                            <span  style="display: inline;">Dispatched</span>
+                            <span  style="display: inline;">Delivered</span>
+                            <form class="form-horizontal" role="form" action="" method="post" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <label for="cars"> Choose</label>
+
+                                <select name="rating" id="rating">
+                                <option value=1>Bad</option>
+                                <option value=2>Satisfactory</option>
+                                <option value=3>Good</option>
+                                </select>
+                                <label >Remark</label>
+                                <textarea  name="remark" rows="2" cols="50">                       
+                                </textarea>                        
+                                <input type="hidden" name="orderid" value={{order.4}}>                        
+                                <div class="form-group">
+                                    <div class="col-sm-offset-2 col-sm-10">
+                                        <button type="submit" class="btn btn-success btn-lg">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
                             
                             
                             {% endif %}
@@ -60,6 +79,8 @@
                         
                         
                     </div>
+                    
+
                     <div class="clearfix"></div>
                 
             

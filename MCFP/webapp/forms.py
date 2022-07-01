@@ -1,18 +1,18 @@
 from wsgiref.validate import validator
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from .models import User,Customer,Restaurant,Item,Menu
+from js2py import require
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
 import re
-from .models import Restaurant
+from .models import *
 
 def usr_name(value):
 	pattern = re.compile("^[a-zA-Z]{3,}$")
 	#"^[A-Za-z]\\w{5, 29}$"
-	if  len(value)>30 or len(value)<=5:
-		raise ValidationError("Min 5 and Max 12 Characters")
+	if  len(value)>30 or len(value)<4:
+		raise ValidationError("Min 4 and Max 12 Characters")
 	if not pattern.match(value):
 		raise ValidationError("Only Alphabets")
 		
@@ -32,6 +32,14 @@ def passw(value):
 def mobile(value):
   if len(value) < 10 or not value.isdigit() or len(value)>12:
     raise ValidationError("Invalid Mobile")
+
+def feedback(value):
+	pattern = re.compile("^[a-zA-Z]{3,}$")
+	#"^[A-Za-z]\\w{5, 29}$"
+	if  len(value)>199 or len(value)<4:
+		raise ValidationError("Min 4 and Max 200 Characters")
+	if not pattern.match(value):
+		raise ValidationError("Only Alphabets")
 
 
 # def store_loc(value):
@@ -122,6 +130,8 @@ class itemadd(forms.ModelForm):
 		model = Item
 		fields =['fname','category','img']
 
+
+		
 
 
 

@@ -185,6 +185,7 @@ def slotcheck(usr):
             slot_check_set.remove(i.slot)
     return slot_check_set
 
+@login_required(login_url='home:login')
 def parkslot(request):
     usr=request.user.username
     slot_set=slotcheck(usr)
