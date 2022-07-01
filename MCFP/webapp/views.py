@@ -12,6 +12,8 @@ from django.contrib.auth.decorators import login_required
 from parking.models import parking_slots
 import json
 from django.http import JsonResponse
+from parking.models import Vehicle
+
 
 
 #### ---------- General Side -------------------#####
@@ -44,7 +46,6 @@ def restuarent(request):
 			r_object=Restaurant.objects.filter(rname__startswith=query).distinct()
 		return render(request,'webapp/restaurents.html',{'r_object':r_object})
 	return render(request,'webapp/restaurents.html',{'r_object':r_object})
-
 
 #popmenu in restaurant list for customers
 def popmenu(request):
@@ -96,7 +97,6 @@ def customerRegister(request):
 	}			
 	return render(request,'webapp/signup.html',context)
 
-
 # Customer Login
 def customerLogin(request):
 	if request.method=="POST":
@@ -113,7 +113,6 @@ def customerLogin(request):
 			return render(request,'webapp/login.html',{'error_message': 'Invalid Login'})
 	return render(request,'webapp/login.html')
 
-
 # customer profile view
 def customerProfile(request,pk=None):
 	if request.user.is_customer==False:
@@ -122,9 +121,33 @@ def customerProfile(request,pk=None):
 		user = User.objects.get(pk=pk)
 	else:
 		user=request.user
-	
-	return render(request,'webapp/profile.html',{'user':user})
 
+	vehicle=Vehicle.objects.filter(ownercontact=user.customer.phone,status='In')	
+	if vehicle.count()!=0:
+		gate=vehicle[0].gate
+		
+	else:
+		gate=False
+	return render(request,'webapp/profile.html',{'user':user,'gate':gate})
+
+
+
+
+def parkslot(request):
+	user=request.user
+	vehicle=Vehicle.objects.filter(ownercontact=user.customer.phone,status='In')	
+	if vehicle.count()!=0:
+		slots=vehicle[0].slot
+		print(slots)
+		gate=vehicle[0].gate
+		slot=[False]*20
+		slot[slots-1]=True
+		s1=slot[:10]
+		s2=slot[10:]
+		slot1 = dict(enumerate(s1,start=1))
+		slot2=dict(enumerate(s2,start=11))
+	d={'slot1':slot1.items(),'slot2':slot2.items(),'gate':gate}
+	return render(request, 'parking/slots.html', d)
 
 #Create customer profile 
 def createCustomer(request):
@@ -141,7 +164,6 @@ def createCustomer(request):
 	'title':"Complete Your profile"
 	}
 	return render(request,'webapp/profile_form.html',context)
-
 
 #  Update customer detail
 @login_required(login_url='food:index')
@@ -190,7 +212,6 @@ def restuarantMenu(request,pk=None):
 		'rlocation':rest[0].location,
 	}
 	return render(request,'webapp/menu.html',context)
-
 
 @login_required(login_url='/login/user/')
 def checkout(request):
@@ -263,7 +284,6 @@ def restRegister(request):
 	}			
 	return render(request,'webapp/restsignup.html',context)	
 
-
 # restuarant login
 def restLogin(request):
 	if request.method=="POST":
@@ -280,7 +300,6 @@ def restLogin(request):
 		else:
 			return render(request,'webapp/restlogin.html',{'error_message': 'Invalid Login'})
 	return render(request,'webapp/restlogin.html')
-
 
 # restaurant profile view
 @login_required(login_url='/login/restaurant/')
@@ -479,8 +498,6 @@ def custorder(request):
 		"orders" : corders,
 	}
 	return render(request,"webapp/custorder.html",context)
-
-
 
 @login_required(login_url='/login/restaurant/')	
 def orderlist(request):

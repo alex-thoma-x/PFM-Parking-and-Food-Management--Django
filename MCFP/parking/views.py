@@ -196,7 +196,6 @@ def parkslot(request):
     s1=slot[:10]
     s2=slot[10:]
     slot1 = dict(enumerate(s1,start=1))
-
     slot2=dict(enumerate(s2,start=11))
    
     print(slot1,slot2)

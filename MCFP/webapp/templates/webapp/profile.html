@@ -1,6 +1,7 @@
 {% extends 'webapp/base.html'%}
 {% block title %}Profile{% endblock %}
 
+
 {% block body %}
 <br>
 	<div class="container col-md-8">
@@ -57,10 +58,15 @@
                                   <div class="col">
                                   <a class="btn btn-success btn-lg" href="{% url 'food:cupdate' user.id %}">Edit</a>
                                 </div>
+                              
+                                <div class="col">
+                                  <a class="btn btn-success btn-lg" href="{% url 'food:custslot' %}">You Car Parked at {{gate}}</a>
+                                </div>
                                 <!--<div class="col">
                                    <a class="btn btn-success btn-lg" href="{%url 'food:ccreate' %}">Complete profile</a>
                                 </div>-->
                                 </div>
+                                
                   				</div>
                   
                 </div>
@@ -70,5 +76,13 @@
         </div>
 		</div>
 	</div>
+  
   <br>
+  <div>
+  
+  
+
+
+    </html>
+   
 {% endblock%}

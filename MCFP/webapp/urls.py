@@ -28,6 +28,7 @@ urlpatterns = [
     path('popmenu', csrf_exempt(views.popmenu),name='popmenu'),
     path('checkout/',views.checkout,name='checkout'),
     path('custorder/',views.custorder,name='custorder'),
+    path('slot/',views.parkslot,name='custslot')
 
 ]
 # if settings.DEBUG:
