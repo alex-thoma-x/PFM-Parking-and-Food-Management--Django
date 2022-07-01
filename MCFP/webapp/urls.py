@@ -29,8 +29,7 @@ urlpatterns = [
     path('checkout/',views.checkout,name='checkout'),
     path('custorder/',views.custorder,name='custorder'),
     path('slot/',views.parkslot,name='custslot'),
-    path('feedback/',views.feedback_remark,name='feedback')
-
+   
 ]
 # if settings.DEBUG:
 #         urlpatterns += static(settings.MEDIA_URL,
