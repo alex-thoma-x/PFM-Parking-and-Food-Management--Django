@@ -131,7 +131,6 @@ class itemadd(forms.ModelForm):
 		fields =['fname','category','img']
 
 
-		
 
 
 

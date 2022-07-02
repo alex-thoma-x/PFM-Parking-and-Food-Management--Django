@@ -1,3 +1,4 @@
+from lib2to3.pgen2.tokenize import generate_tokens
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login,logout
 from .forms import CustomerSignUpForm,RestuarantSignUpForm,CustomerForm,RestuarantForm, feedback, itemadd
@@ -11,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from parking.models import parking_slots
 import json
+import math, random
 from django.http import JsonResponse
 from parking.models import Vehicle
 from parking.views import slotcheck
@@ -24,11 +26,18 @@ def index(request):
 	slots=parking_slots.objects.all()
 	return render(request,'webapp/index.html',{'slots':slots})
 
+#global variable for storing Orderid
+order_id_for_otp=False
+
 @login_required(login_url='food:index')
 def orderplaced(request):
 	if request.user.is_customer==False and request.user.is_superuser==False:
 		return redirect('food:logout')
-	return render(request,'webapp/orderplaced.html',{})
+	if not order_id_for_otp:
+		return redirect('food:restuarant')
+	order=Order.objects.filter(id=int(order_id_for_otp))
+	return render(request,'webapp/orderplaced.html',{'order':order[0].secret_code})
+
 
 # Showing Restaurants list to Customer
 def restuarent(request):
@@ -227,6 +236,8 @@ def checkout(request):
 		ordid = request.POST['oid']
 		Order.objects.filter(id=int(ordid)).update(delivery_addr = addr,
                                                     status=Order.ORDER_STATE_PLACED)
+		global order_id_for_otp
+		order_id_for_otp=ordid
 		return redirect('food:oderplaced')
 	else:	
 		cart = request.COOKIES['cart'].split(",")
@@ -244,6 +255,7 @@ def checkout(request):
 				oiid.item_id=it[0]
 				oiid.quantity=int(y)
 				oid.r_id=it[0].r_id
+				oid.secret_code=generateOTP()
 				oid.save()
 				oiid.ord_id =oid
 				oiid.save()
@@ -264,6 +276,92 @@ def checkout(request):
 		}	
 		return render(request,'webapp/order.html',context)
 
+#to generate otp to verify the
+def generateOTP() :
+    digits = "0123456789"
+    OTP = ""
+    for i in range(4) :
+        OTP += digits[math.floor(random.random() * 10)]
+ 
+    return OTP
+
+#Order listiing  for users order of users and its status
+@login_required(login_url='food:login')
+def custorder(request):
+	if request.user.is_customer==False:
+		return redirect('food:logout')
+	if request.method=="POST":
+		feed = request.POST['remark']
+		orderid = int(request.POST['orderid'])
+		rating=int(request.POST['rating'])
+		if feed=='':
+			feed=None
+		p=Order.objects.get(id=orderid)
+		
+		usr=request.user
+		remark=Feedback(customer=usr,remarks=feed,rating=rating,orderid=p)
+		remark.save()
+	orders = Order.objects.filter(orderedBy=request.user.id).order_by('-timestamp')
+	corders = []
+
+	for order in orders:
+
+		user = User.objects.filter(id=order.r_id.user.id)
+		user = user[0]
+		corder = []
+		if user.is_restaurant:
+			corder.append(user.restaurant.rname)
+			corder.append(user.restaurant.info)
+		else:
+			corder.append(user.customer.f_name)
+			corder.append(user.customer.phone)
+		items_list = orderItem.objects.filter(ord_id=order)
+
+		items = []
+		for item in items_list:
+			citem = []
+			citem.append(item.item_id)
+			citem.append(item.quantity)
+			menu = Menu.objects.filter(id=item.item_id.id)
+			citem.append(menu[0].price*item.quantity)
+			menu = 0
+			items.append(citem)
+
+		corder.append(items)
+		corder.append(order.total_amount)
+		corder.append(order.id)
+		print(order.id)
+		
+
+		x = order.status
+		if x == Order.ORDER_STATE_WAITING:
+		    continue
+		elif x == Order.ORDER_STATE_PLACED:
+		    x = 1
+		elif x == Order.ORDER_STATE_ACKNOWLEDGED:
+			x = 2
+		elif x == Order.ORDER_STATE_COMPLETED:
+			x = 3
+		elif x == Order.ORDER_STATE_DISPATCHED:
+			x = 4
+		elif x == Order.ORDER_STATE_CANCELLED:
+			x = 5
+		else:
+			continue
+
+		corder.append(x)
+		corder.append(order.timestamp)
+		corder.append(order.delivery_addr)
+		corder.append(order.secret_code)
+		corders.append(corder)
+	print(corders)
+	
+	context = {
+		"orders" : corders,
+		
+	}
+
+	return render(request,"webapp/custorder.html",context)
 
 ####### ------------------- Restaurant Side ------------------- #####
 
@@ -353,15 +451,21 @@ def updateRestaurant(request,id):
 def additem(request):
 	if request.user.is_restaurant==False:
 		return redirect('food:logout')
-	err=True
+	err=False
 	if not request.user.is_authenticated:
 		return redirect("food:rlogin") 
 	if request.POST:
 		form = itemadd(request.POST, request.FILES)
 		if form.is_valid():
 			obj=form.save(commit=False)
-			obj.rid=request.user.restaurant.id
-			obj.save()
+			data = form.cleaned_data
+			field = data['fname']
+			it=Item.objects.filter(fname=field,rid=request.user.restaurant.id)
+			if it.count()==0:
+				obj.rid=request.user.restaurant.id
+				obj.save()
+			else:
+				err=True
 		# rest=Restaurant.objects.filter(id=request.user.restaurant.id);
 		# rest=rest[0]
 		# rid=(request.user.restaurant.id)
@@ -380,7 +484,7 @@ def additem(request):
 		# 	return redirect('food:mmenu')
 	else:
 		form=itemadd()      		
-	return render(request,'webapp/additem.html',{'form' : form})
+	return render(request,'webapp/additem.html',{'form' : form,'space':err})
 
 # add  menu item for restaurant	
 @login_required(login_url='/login/restaurant/')		
@@ -389,6 +493,7 @@ def menuManipulation(request):
 		return redirect('food:logout')
 	if not request.user.is_authenticated:
 		return redirect("food:rlogin") 
+	err=False
 		
 	rest=Restaurant.objects.filter(id=request.user.restaurant.id);
 	rest=rest[0]
@@ -403,12 +508,16 @@ def menuManipulation(request):
 			itemid=int(request.POST['item'])
 			item=Item.objects.filter(id=itemid)
 			item=item[0]
-			menu=Menu()
-			menu.item_id=item
-			menu.r_id=rest
-			menu.price=int(request.POST['price'])
-			menu.quantity=int(request.POST['quantity'])
-			menu.save()
+			M=Menu.objects.filter(item_id=item)
+			if M.count()==0:
+				menu=Menu()
+				menu.item_id=item
+				menu.r_id=rest
+				menu.price=int(request.POST['price'])
+				menu.quantity=int(request.POST['quantity'])
+				menu.save()
+			else:
+				err=True
 		else:
 			menuid = int(request.POST['menuid'])
 			menu = Menu.objects.filter(id=menuid)
@@ -438,85 +547,10 @@ def menuManipulation(request):
 		"menu":menu,
 		"items":items,
 		"username":request.user.username,
+		"err":err
 	}
 	return render(request,'webapp/menu_modify.html',context)
 
-#Order listiing  for users order of users and its status
-@login_required(login_url='food:login')
-def custorder(request):
-	if request.user.is_customer==False:
-		return redirect('food:logout')
-	if request.method=="POST":
-		feed = request.POST['remark']
-		orderid = int(request.POST['orderid'])
-		rating=int(request.POST['rating'])
-		if feed=='':
-			feed=None
-		p=Order.objects.get(id=orderid)
-		
-		usr=request.user
-		remark=Feedback(customer=usr,remarks=feed,rating=rating,orderid=p)
-		remark.save()
-	orders = Order.objects.filter(orderedBy=request.user.id).order_by('-timestamp')
-	corders = []
-
-	for order in orders:
-
-		user = User.objects.filter(id=order.r_id.user.id)
-		user = user[0]
-		corder = []
-		if user.is_restaurant:
-			corder.append(user.restaurant.rname)
-			corder.append(user.restaurant.info)
-		else:
-			corder.append(user.customer.f_name)
-			corder.append(user.customer.phone)
-		items_list = orderItem.objects.filter(ord_id=order)
-
-		items = []
-		for item in items_list:
-			citem = []
-			citem.append(item.item_id)
-			citem.append(item.quantity)
-			menu = Menu.objects.filter(id=item.item_id.id)
-			citem.append(menu[0].price*item.quantity)
-			menu = 0
-			items.append(citem)
-
-		corder.append(items)
-		corder.append(order.total_amount)
-		corder.append(order.id)
-		print(order.id)
-		
-
-		x = order.status
-		if x == Order.ORDER_STATE_WAITING:
-		    continue
-		elif x == Order.ORDER_STATE_PLACED:
-		    x = 1
-		elif x == Order.ORDER_STATE_ACKNOWLEDGED:
-			x = 2
-		elif x == Order.ORDER_STATE_COMPLETED:
-			x = 3
-		elif x == Order.ORDER_STATE_DISPATCHED:
-			x = 4
-		elif x == Order.ORDER_STATE_CANCELLED:
-			x = 5
-		else:
-			continue
-
-		corder.append(x)
-		corder.append(order.timestamp)
-		corder.append(order.delivery_addr)
-		corders.append(corder)
-	print(corders)
-	
-	context = {
-		"orders" : corders,
-		
-	}
-
-	return render(request,"webapp/custorder.html",context)
 
 @login_required(login_url='/login/restaurant/')	
 def orderlist(request):

@@ -44,7 +44,7 @@ class Restaurant(models.Model):
 		
 class Item(models.Model):
 	id 			= models.AutoField(primary_key=True)
-	fname 		= models.CharField(max_length=30,blank=False,unique=True,verbose_name='Item')
+	fname 		= models.CharField(max_length=30,blank=False,verbose_name='Item')
 	category 	= models.CharField(max_length=50,blank=False)
 	rid			= models.IntegerField(null=False,default=-1,verbose_name='Restaurant')
 	img			=models.ImageField(blank=False)
@@ -71,6 +71,7 @@ class Order(models.Model):
 	delivery_addr   = models.IntegerField(null=False,blank=True,default=-1,verbose_name='Table Number')
 	orderedBy       = models.ForeignKey(User ,on_delete=models.CASCADE)
 	r_id			= models.ForeignKey(Restaurant ,on_delete=models.CASCADE,verbose_name='Restaurant')
+	secret_code		= models.IntegerField(null=False,)
 	# pay_status		=models.BooleanField(null=False,default=False)
 	
 	

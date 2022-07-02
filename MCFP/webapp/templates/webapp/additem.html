@@ -38,6 +38,12 @@
 				
 				</table>
 			</p>
+{% if space %}
+<script>
+  alert('The Restaurant already has an Item In same NAME');  
+  window.location=('{% url 'food:item' %}');
+</script>
+{% endif %}
 		</div>
 	</section>
 </div>

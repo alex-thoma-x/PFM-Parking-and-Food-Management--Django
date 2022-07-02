@@ -69,6 +69,12 @@
 					</tr>
 				</table>
 			</p>
+{% if err %}
+<script>
+  alert('The Item is Already in MENU');  
+  window.location=('{% url 'food:mmenu' %}');
+</script>
+{% endif %}
 		</div>
 	</section>
 	<section id="content3">
