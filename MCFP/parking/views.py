@@ -223,7 +223,7 @@ def add_vehicle(request):
         if slot!=0:
             usr = request.user.username
             slot_check_set=slotcheck(usr)
-            free_slot=random.choice(tuple(slot_check_set))                   
+            free_slot= min(slot_check_set) #random.choice(tuple(slot_check_set))                   
 
             import time
             t = time.localtime()
