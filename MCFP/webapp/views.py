@@ -1,4 +1,6 @@
+from itertools import count
 from lib2to3.pgen2.tokenize import generate_tokens
+from sqlite3 import Timestamp
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login,logout
 from .forms import CustomerSignUpForm,RestuarantSignUpForm,CustomerForm,RestuarantForm, feedback, itemadd
@@ -647,6 +649,59 @@ def orderlist(request):
 	}
 
 	return render(request,"webapp/order-list.html",context)
+
+def analytics(request):
+	from django.db.models import Count,Sum
+	orders = Order.objects.filter(r_id=request.user.restaurant.id)
+	no_of_orders=orders.count()
+	orderitem=orderItem.objects.filter(ord_id__in=orders).values('item_id').order_by('item_id').annotate(dcount=Sum('quantity')).order_by('-dcount')
+	last_week_orders = Order.objects.filter(r_id=request.user.restaurant.id,timestamp__range=last_week())
+	no_of_last_week_orders=last_week_orders.count()
+	print(orderitem)
+	
+	max_ordered_item=orderitem[0]
+	print(max_ordered_item['item_id'])
+	max_ordered_item=Menu.objects.get(id=max_ordered_item['item_id'])
+	max_ordered_item=Item.objects.get(fname=max_ordered_item.item_id)
+	print(max_ordered_item)
+
+
+
+	ordered_item_last_week=orderItem.objects.filter(ord_id__in=last_week_orders).values('item_id').order_by('item_id').annotate(dcount=Sum('quantity')).order_by('-dcount')
+	max_ordered_item_last_week=ordered_item_last_week[0]
+	max_ordered_item_last_week=Menu.objects.get(id=max_ordered_item_last_week['item_id'])
+	max_ordered_item_last_week=Item.objects.get(fname=max_ordered_item_last_week.item_id)
+	Total_revenue=0
+	for i in orderitem:
+	
+		price=Menu.objects.get(id=i['item_id'])
+		Total_revenue=Total_revenue + price.price*i['dcount']
+
+
+	context={
+		'totalorders':no_of_orders,
+		'weekorders':no_of_last_week_orders,
+		'maxordereditem':max_ordered_item,
+		'maxitemcount':orderitem[0]['dcount'],
+		'maxorderlastweek':max_ordered_item_last_week,
+		'lastweekitemcount':ordered_item_last_week[0]['dcount'],
+		'total_revenue':Total_revenue,
+		'items':orderitem
+
+	}
+	return render(request,'webapp/analytics.html',context)
+import datetime
+def last_week():
+    today = datetime.date.today()
+    return [
+        today - datetime.timedelta(days=7),
+        today - datetime.timedelta(days=0)
+    ]	
+
+	
+	
+	
+	
 	
 
 

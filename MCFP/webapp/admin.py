@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import *
 
 
+
 class customer(admin.ModelAdmin):
     search_fields = ['f_name','l_name']
     list_display = (

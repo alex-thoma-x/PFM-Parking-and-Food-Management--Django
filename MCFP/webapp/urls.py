@@ -29,6 +29,7 @@ urlpatterns = [
     path('checkout/',views.checkout,name='checkout'),
     path('custorder/',views.custorder,name='custorder'),
     path('slot/',views.parkslot,name='custslot'),
+    path('analytics/',views.analytics,name='analytics'),
    
 ]
 # if settings.DEBUG:

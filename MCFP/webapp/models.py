@@ -101,6 +101,7 @@ class orderItem(models.Model):
 	item_id 	= models.ForeignKey(Menu ,on_delete=models.CASCADE)
 	ord_id  	= models.ForeignKey(Order,on_delete=models.CASCADE)
 	quantity 	= models.IntegerField(default=0)
+
 	
 	def __str__(self):
 		return str(self.id) 

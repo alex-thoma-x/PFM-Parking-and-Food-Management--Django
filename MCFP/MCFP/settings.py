@@ -37,8 +37,7 @@ INSTALLED_APPS = [
     'start',
     'parking',
     'mathfilters',
-    'crispy_forms',
-   
+    'crispy_forms',                     
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
