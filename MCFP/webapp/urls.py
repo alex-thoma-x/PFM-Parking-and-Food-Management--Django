@@ -30,6 +30,7 @@ urlpatterns = [
     path('custorder/',views.custorder,name='custorder'),
     path('slot/',views.parkslot,name='custslot'),
     path('analytics/',views.analytics,name='analytics'),
+    path("password_reset", views.password_reset_request, name="password_reset")
    
 ]
 # if settings.DEBUG:
