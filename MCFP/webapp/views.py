@@ -319,7 +319,7 @@ def checkout(request):
 		oid.total_amount=totalprice
 		oid.save()
 		currency = 'INR'
-		amount = totalprice  # Rs. 200
+		amount = totalprice*100  # Rs. 200
 	
 		# Create a Razorpay Order
 		razorpay_order = razorpay_client.order.create(dict(amount=amount,
@@ -337,7 +337,7 @@ def checkout(request):
 			"oid":oid.id,
 			'razorpay_order_id':razorpay_order_id,
 			'razorpay_merchant_key':settings.RAZOR_KEY_ID,
-			'razorpay_amount':amount*100,
+			'razorpay_amount':amount,
 			'currency':currency,
 			'callback_url':callback_url
 			
