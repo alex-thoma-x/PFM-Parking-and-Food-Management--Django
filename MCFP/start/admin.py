@@ -28,8 +28,8 @@ class CustomUserAdmin(UserAdmin):
             'fields': ( 'is_customer','is_gate','is_cctv','is_restaurant')
         })
     )
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
     # def get_queryset(self, request):
     #     return self.model.objects.filter(is_gate = True)
@@ -53,8 +53,8 @@ class Myuser(CustomUserAdmin):
             'fields': ( 'is_gate',)
         })
     )
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 from django.contrib.auth.models import Group
 
 admin.site.unregister(Group)

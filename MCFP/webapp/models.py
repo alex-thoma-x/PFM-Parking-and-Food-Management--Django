@@ -72,7 +72,7 @@ class Order(models.Model):
 	orderedBy       = models.ForeignKey(User ,on_delete=models.CASCADE)
 	r_id			= models.ForeignKey(Restaurant ,on_delete=models.CASCADE,verbose_name='Restaurant')
 	secret_code		= models.IntegerField(null=False,)
-	# pay_status		=models.BooleanField(null=False,default=False)
+	pay_status		= models.BooleanField(null=False,default=False)
 	
 	
 	ORDER_STATE_WAITING 	 = "Waiting"

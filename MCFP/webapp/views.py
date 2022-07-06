@@ -28,6 +28,11 @@ from django.db.models.query_utils import Q
 from django.utils.http import urlsafe_base64_encode
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.encoding import force_bytes
+import razorpay
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseBadRequest
+ 
 
 
 
@@ -53,21 +58,23 @@ def orderplaced(request):
 
 # Showing Restaurants list to Customer
 def restuarent(request):
-	# if request.user.is_customer==False and request.user.is_superuser==False:
-	# 	return redirect('food:logout')
-	r_object = Restaurant.objects.all()
-	query 	= request.GET.get('q')
-	if query:
-		# r_object=Restaurant.objects.filter(Q(rname__icontains=query)).distinct()
-		item=Item.objects.filter(fname__startswith=query).values_list('rid', flat=True)
+	if request.user.is_anonymous or request.user.is_customer:
 		
-		if item.count()!=0:
-			r_object=Restaurant.objects.filter(id__in=item).distinct()
-		else:
-		# r_object=Restaurant.objects.filter(Q(rname__icontains=query)).distinct()
-			r_object=Restaurant.objects.filter(rname__startswith=query).distinct()
+		r_object = Restaurant.objects.all()
+		query 	= request.GET.get('q')
+		if query:
+			# r_object=Restaurant.objects.filter(Q(rname__icontains=query)).distinct()
+			item=Item.objects.filter(fname__startswith=query).values_list('rid', flat=True)
+			
+			if item.count()!=0:
+				r_object=Restaurant.objects.filter(id__in=item).distinct()
+			else:
+			# r_object=Restaurant.objects.filter(Q(rname__icontains=query)).distinct()
+				r_object=Restaurant.objects.filter(rname__startswith=query).distinct()
+			return render(request,'webapp/restaurents.html',{'r_object':r_object})
 		return render(request,'webapp/restaurents.html',{'r_object':r_object})
-	return render(request,'webapp/restaurents.html',{'r_object':r_object})
+	else:
+		return redirect('food:logout')
 
 #popmenu in restaurant list for customers
 def popmenu(request):
@@ -265,6 +272,8 @@ def restuarantMenu(request,pk=None):
 	}
 	return render(request,'webapp/menu.html',context)
 
+
+
 @login_required(login_url='/login/user/')
 def checkout(request):
 	if request.user.is_customer==False:
@@ -276,6 +285,8 @@ def checkout(request):
                                                     status=Order.ORDER_STATE_PLACED)
 		global order_id_for_otp
 		order_id_for_otp=ordid
+		od=Order.objects.filter(id=int(ordid))
+		# pay(od[0].price)
 		return redirect('food:oderplaced')
 	else:	
 		cart = request.COOKIES['cart'].split(",")
@@ -307,12 +318,94 @@ def checkout(request):
 			items.append(item)
 		oid.total_amount=totalprice
 		oid.save()
+		currency = 'INR'
+		amount = totalprice  # Rs. 200
+	
+		# Create a Razorpay Order
+		razorpay_order = razorpay_client.order.create(dict(amount=amount,
+														currency=currency,
+														payment_capture='0'))
+	
+		# order id of newly created order.
+		razorpay_order_id = razorpay_order['id']
+		callback_url = 'paymenthandler/'
+	
+		
 		context={
 			"items":items,
 			"totalprice":totalprice,
-			"oid":oid.id
+			"oid":oid.id,
+			'razorpay_order_id':razorpay_order_id,
+			'razorpay_merchant_key':settings.RAZOR_KEY_ID,
+			'razorpay_amount':amount*100,
+			'currency':currency,
+			'callback_url':callback_url
+			
 		}	
 		return render(request,'webapp/order.html',context)
+
+def paymenthandler(request):
+	if request.method == "POST":
+		return redirect('food:oderplaced')
+	else:
+		return redirect('food:oderplaced')
+    
+		
+	# try:		
+	# 	# get the required parameters from post request.
+	# 		payment_id = request.POST.get('razorpay_payment_id', '')
+	# 		razorpay_order_id = request.POST.get('razorpay_order_id', '')
+	# 		signature = request.POST.get('razorpay_signature', '')
+	# 		params_dict = {
+	# 			'razorpay_order_id': razorpay_order_id,
+	# 			'razorpay_payment_id': payment_id,
+	# 			'razorpay_signature': signature
+	# 		}
+
+	# 		# verify the payment signature.
+	# 		result = razorpay_client.utility.verify_payment_signature(
+	# 			params_dict)
+	# 		if result is None:
+	# 			amount = 20000  # Rs. 200
+	# 			try:
+	# 				# capture the payemt
+	# 				razorpay_client.payment.capture(payment_id, amount)
+					
+					
+
+	# 				# render success page on successful caputre of payment
+					
+	# 				pay=Order.objects.filter(id=int(order_id_for_otp))
+	# 				pay.pay_status=True
+	# 				return redirect('food:oderplaced')
+					
+	# 			except:
+
+	# 				# if there is an error while capturing payment.
+	# 				pay=Order.objects.filter(id=int(order_id_for_otp))
+	# 				pay.pay_status=True
+	# 				return redirect('food:oderplaced')
+	# 		else:
+
+	# 			# if signature verification fails.
+	# 			pay=Order.objects.filter(id=int(order_id_for_otp))
+	# 			pay.pay_status=True
+	# 			return redirect('food:oderplaced')
+	# 	except:
+
+	# 	# if we don't find the required parameters in POST data
+	# 		return HttpResponseBadRequest()
+	# else:
+	# # if other than POST request is made.
+	# 	return HttpResponseBadRequest()
+			
+
+razorpay_client = razorpay.Client(
+    auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
+
+
+@csrf_exempt
+
 
 #to generate otp to verify the
 def generateOTP() :
@@ -425,20 +518,24 @@ def restRegister(request):
 
 # restuarant login
 def restLogin(request):
-	if request.method=="POST":
-		username = request.POST['username']
-		password = request.POST['password']
-		user     = authenticate(username=username,password=password)
-		if user is not None:
-			if user.is_active and user.is_restaurant:
-				login(request,user)
-				return redirect("food:rprofile")
-			
+	if request.user.is_anonymous or request.user.is_customer:
+		if request.method=="POST":
+			username = request.POST['username']
+			password = request.POST['password']
+			user     = authenticate(username=username,password=password)
+			if user is not None:
+				if user.is_active and user.is_restaurant:
+					login(request,user)
+					return redirect("food:rprofile")
+				
+				else:
+					return render(request,'webapp/restlogin.html',{'error_message':'Your account disable or You are not permitted'})
 			else:
-				return render(request,'webapp/restlogin.html',{'error_message':'Your account disable or You are not permitted'})
-		else:
-			return render(request,'webapp/restlogin.html',{'error_message': 'Invalid Login'})
-	return render(request,'webapp/restlogin.html')
+				return render(request,'webapp/restlogin.html',{'error_message': 'Invalid Login'})
+		return render(request,'webapp/restlogin.html')
+	else:
+		return redirect('food:logout')
+
 
 # restaurant profile view
 @login_required(login_url='/login/restaurant/')

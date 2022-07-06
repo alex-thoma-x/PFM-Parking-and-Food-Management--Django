@@ -1,5 +1,54 @@
 {% extends 'webapp/base.html'%}
 {% block title %} Cart {% endblock %}
+<style>
+	* {
+	  box-sizing: border-box;
+	  padding: 0px;
+	  margin: 0px;
+	  font-family: cursive;
+	}
+	html,
+	body {
+	  height: 100%;
+	}
+	body {
+	  background-color: #f1f5f8;
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	}
+	.card {
+	  background-color: white;
+	  padding: 25px;
+	  border: 1px solid #bbbbbb;
+	  border-radius: 5px;
+	  box-shadow: 1px 1px 10px 0px rgb(0 0 0 / 25%);
+	}
+	.title {
+	  text-align: center;
+	  letter-spacing: 1px;
+	}
+	.muted {
+	  color: #8e7f7f;
+	  display: block;
+	  margin-bottom: 10px;
+	  text-align: center;
+	}
+	.btn_container {
+	  padding: 20px;
+	  text-align: center;
+	}
+	.btn {
+	  border-radius: 4px;
+	  cursor: pointer;
+	  padding: 4px 8px;
+	  background-color: #ffaaa7;
+	  color: white;
+	  font-size: 1.2em;
+	  font-weight: 600;
+	  letter-spacing: 1px;
+	}
+  </style>
 
 {% block body %}
 <div class="container ">
@@ -30,9 +79,40 @@
 							<div><input type="number" name="address" required/></div>
 							<input type="hidden" name="oid" value="{{oid}}">
 							<br>
-							<input type="submit" class="btn btn-success btn-lg" value="Order" name="submit">
+							<input type="submit" class="btn" id="pay-btn" value="Order" name="submit">
 				</form>
+			
 
 </div>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  var options = {
+	 
+	// Enter the Key ID generated from the Dashboard
+	key: "{{ razorpay_merchant_key }}",
+	 
+	// Amount is in currency subunits.
+	// Default currency is INR. Hence,
+	// 50000 refers to 50000 paise
+	amount: "{{ razorpay_amount }}",
+	currency: "{{ currency }}",
+	 
+	// Your/store name.
+	name: "Dj Razorpay",
+	 
+	// Pass the `id` obtained in the response of Step 1
+	order_id: "{{ razorpay_order_id }}",
+	callback_url: "{{ callback_url }}",
+  };
+   
+  // initialise razorpay with the options.
+  var rzp1 = new Razorpay(options);
+   
+  // add event listener to the payment button.
+  document.getElementById("pay-btn").onclick = function (e) {
+	rzp1.open();
+	e.preventDefault();
+  };
+</script>
 
 {% endblock %}

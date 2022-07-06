@@ -11,7 +11,7 @@ from .models import *
 def usr_name(value):
 	pattern = re.compile("^[a-zA-Z]{3,}$")
 	#"^[A-Za-z]\\w{5, 29}$"
-	if  len(value)>30 or len(value)<4:
+	if  len(value)>30 or len(value)<3:
 		raise ValidationError("Min 4 and Max 12 Characters")
 	if not pattern.match(value):
 		raise ValidationError("Only Alphabets")
