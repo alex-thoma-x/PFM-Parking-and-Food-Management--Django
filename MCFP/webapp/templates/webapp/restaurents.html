@@ -3,109 +3,127 @@
 
 {% block body %}
 <div class="container-fluid">
-        <h1 class="text-center text-danger"><strong>Restaurants</strong></h1>
+  <h1 class="text-center text-danger"><strong>Restaurants</strong></h1>
 </div>
 <br>
 <div class="container">
-    <div class="col-sm-4 col-sm-offset-3">
-      <form class="form-horizontal" role="search" method="get" action=''>
-         <div class="form-group ">
-         <div class="input-group">  
-            <input type="text" class="form-control input-lg " name="q" value="{{ request.GET.q }}" placeholder= "Search Restaurant " style="height: 40px; width: 50%; font-size: 20px;" />
-            <span class='input-group-btn'>
-             <button class='btn btn-info btn-lg'style="height:40px; font-size: 20px;" type='submit'>Search
-             </button>
-         </span>
+  <div class="col-sm-4 col-sm-offset-3">
+    <form class="form-horizontal" role="search" method="get" action=''>
+      <div class="form-group ">
+        <div class="input-group">
+          <input type="text" class="form-control input-lg " name="q" value="{{ request.GET.q }}"
+            placeholder="Search Restaurant " style="height: 40px; width: 50%; font-size: 20px;" />
+          <span class='input-group-btn'>
+            <button class='btn btn-info btn-lg' style="height:40px; font-size: 20px;" type='submit'>Search
+            </button>
+          </span>
         </div>
-     </div>
-   </form>
-
- </div>
-</div> 
-<br>
-<br>
-	<div class="container">
-    <div class="toutput">
-      <table>
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Category</th>
-            <th>Name</th>
-            <th>Price</th>
-          </tr>
-        </thead>
-        <tbody class="tabody">
-
-        </tbody>
-      </table>
-    </div>
-		<div class="row">
-		{% for rest in r_object %}
-    <div class="col-xs-7 col-md-6" id="{{rest.id}}" onclick="popmenu(document.getElementById('{{rest.id}}').id)", ondblclick = "checkout(document.getElementById('{{rest.id}}').id)">
-      <div class="thumbnail">
-   		   <div class="media mb-2 ml-8" style="border-radius: 10px; border-style: groove; border-width: 2px;">
-        <a href="{% url 'food:menu' rest.id %}" class="pull-left ">
-            <img src="{{rest.r_logo.url}}" class="img-thumbnail img-responsive " style="height: 130px; width: 130px;">
-        </a>
-        <div class="media-body pl-4">
-          <a href="{% url 'food:menu' rest.id %}" style="text-decoration: none !important;"><h1 class="media-heading text-info mt-1" style="height: 20px;"><strong>{{rest.rname}}</strong></h1></a>
-            <h6 class="text-secondary"><font size="2"><strong>{{rest.info}}</strong></font></h6>
-            <!-- <h4><font size="2">Min: &#x20b9; {{rest.min_ord}}</font></h4> -->
-          	<h5><font size="3">Status: <strong class="text-success">{{rest.status}}</strong></font></h5>
-          
-            <button onclick="popmenu(document.getElementById('{{rest.id}}').id)" class="dropbtn">Items</button>
-        </div>
-         
-    </div>
+      </div>
+    </form>
 
   </div>
 </div>
+<br>
+<br>
+<div class="container">
+  <div class="toutput">
+    <table class="table" style="border:3px solid rgb(26, 4, 114)">
+      <thead>
+        <tr class="table-primary" style="text-align:center;">
+          <th>Image</th>
+          <th>Category</th>
+          <th>Name</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody class="tabody">
 
-{% endfor%}
-<script>
-  const tb=document.querySelector(".toutput");
-  tb.style.display = "none";
-  const tbody=document.querySelector(".tabody");
-function checkout(x){ 
-    var url ="{% url 'food:menu' 1 %}"
-    document.location.href = url.replace('1', x);
+      </tbody>
+    </table>
+  </div>
+  <div class="row">
+    {% for rest in r_object %}
+    <div class="col-xs-7 col-md-6" id="{{rest.id}}" onclick="popmenu(document.getElementById('{{rest.id}}').id)" ,
+      ondblclick="checkout(document.getElementById('{{rest.id}}').id)">
+      <div class="thumbnail">
+        <div class="media mb-2 ml-8" style="border-radius: 10px; border-style: groove; border-width: 2px;">
+          <a href="{% url 'food:menu' rest.id %}" class="pull-left ">
+            <img src="{{rest.r_logo.url}}" class="img-thumbnail img-responsive " style="height: 130px; width: 130px;">
+          </a>
+          <div class="media-body pl-4">
+            <a href="{% url 'food:menu' rest.id %}" style="text-decoration: none !important;">
+              <h1 class="media-heading text-info mt-1" style="height: 20px;"><strong>{{rest.rname}}</strong></h1>
+            </a>
+            <h6 class="text-secondary">
+              <font size="2"><strong>{{rest.info}}</strong></font>
+            </h6>
+            <!-- <h4><font size="2">Min: &#x20b9; {{rest.min_ord}}</font></h4> -->
+            <h5>
+              <font size="3"><code>Status:</code> <strong class="text-success">{{rest.status}}</strong></font>
+            </h5>
 
-}
+            <button onclick="popmenu(document.getElementById('{{rest.id}}').id)"
+              class="dropbtn btn btn-outline-success btn-lg"><b>Items</b> </button><i class="bi bi-check-circle"></i>
+          </div>
 
-  function popmenu(x){
-    console.log(x);
+        </div>
+
+      </div>
+    </div>
     
+    {% endfor%}
+    <!-- <div class="row">
+      <div class="column">
+        <div class="card">
+          <img src="{{rest.r_logo.url}}" alt="" style="width:15px;height:auto;padding-top:10px">
+          <h1>{{rest.rname}}</h1>
+          <p class="title">{{rest.info}}</p>
+          <p><code>Status:</code> <strong class="text-success">{{rest.status}}</strong></p>
+          <button class="dropbtn btn btn-outline-success btn-lg"><b>Items</b> </button>
+
+        </div>
+      </div>
+    </div> -->
     
-    fetch("/food/popmenu",{
-                    body: JSON.stringify({rid:x}),
-                    method: "POST",
-                })
-                .then((res) => res.json())
-                .then((data) => {
-                    console.log(data);
-                    tbody.innerHTML="";
-                    tb.style.display = "block";
-                    data.forEach((item) =>{
-                        tbody.innerHTML += `
-                        <tr>
-                          <td><img src="/media/${item.img}" height="50px" width="60%" ></td>
-                          <td>${item.category}</td>
-                          <td>${item.fname}</td>
-                          <td>${item.price}</td>
+
+    <script>
+      const tb = document.querySelector(".toutput");
+      tb.style.display = "none";
+      const tbody = document.querySelector(".tabody");
+      function checkout(x) {
+        var url = "{% url 'food:menu' 1 %}"
+        document.location.href = url.replace('1', x);
+
+      }
+
+      function popmenu(x) {
+        console.log(x);
+
+        fetch("/food/popmenu", {
+          body: JSON.stringify({ rid: x }),
+          method: "POST",
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+            tbody.innerHTML = "";
+            tb.style.display = "block";
+            data.forEach((item) => {
+              tbody.innerHTML += `
+                        <tr style="text-align:center;border:3px solid rgb(26, 4, 114);border-radius:10px;">
+                          <td style="max-width:100%;white-space:nowrap;text-align:center;width:110px"><img src="/media/${item.img}" height="100px" width="150px" style=border:1;padding:0;margin:0;display-block;"></td>
+                          <td class="table-success" style="vertical-align:middle;"><b>${item.category}</b></td>
+                          <td class="table-success"style="vertical-align:middle;"><b>${item.fname}</b></td>
+                          <td class="table-success"style="vertical-align:middle;"><b>${item.price}</b></td>
                           </tr>
-
-
                         `;
-                    });
-                });
+            });
+          });
 
-  }
+      }
   // document.querySelector('.col-xs-7 col-md-6').onclick=popmenu;
-  </script>
-</div>
+    </script>
+  </div>
 </div>
 
 {% endblock %}
-
-

@@ -22,7 +22,7 @@
 			<h3 class="text-danger"><font size="5"><strong>Menu</strong></font></h3>
 			<br>
 				<table class="table table-hover table-bordered">
-					<thead>
+					<thead class="table-success" style="text-align: center;">
 						<th>Item Picture</th>
 						<th>Item Name</th>
 						<th>Category</th>
@@ -30,10 +30,10 @@
 						<th>Add</th>
 					</thead>
 					{% for x in items %}
-					<td><img src="{{x.6.url}}"  height="50px" width="60%"></td>
-					<td>{{x.0}}</td>
-					<td>{{x.1}}</td>
-					<td>&#x20b9; {{x.2}}</td>
+					<td style="max-width:100%;white-space:nowrap;text-align:center;width:110px"><img src="{{x.6.url}}" height="100px" width="150px" style="border:1;padding:0;margin:0;display-block;"></td>
+					<td style="text-align: center;vertical-align: middle;">{{x.0}}</td>
+					<td style="text-align: center;vertical-align: middle;">{{x.1}}</td>
+					<td style="text-align: center; vertical-align: middle;">&#x20b9; {{x.2}}</td>
 					{% if x.4 == "Open" %}
 					{% if x.5 > 0 %}
 					<td>
