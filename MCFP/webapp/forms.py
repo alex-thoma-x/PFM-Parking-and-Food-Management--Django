@@ -1,7 +1,7 @@
 from wsgiref.validate import validator
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-from js2py import require
+# from js2py import require
 from django.utils.translation import gettext_lazy as _
 from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
