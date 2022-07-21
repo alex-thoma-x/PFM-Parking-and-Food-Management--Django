@@ -62,6 +62,14 @@
                                 <div class="col">
                                   <a class="btn btn-success btn-lg" href="{% url 'food:custslot' %}">You Car Parked at {{gate}}</a>
                                 </div>
+                                {% elif book %}
+                                <div class="col">
+                                  <a class="btn btn-success btn-lg" href="{% url 'food:bookslot'%}">Block a parking Slot</a>
+                                </div>
+                                {% else %}
+                                <div class="col">
+                                  <a class="btn btn-success btn-lg" href="#">You Have already booked slot at {{bgate}} Until {{time}}</a>
+                                </div>
                                 {% endif %}
                                 <!--<div class="col">
                                    <a class="btn btn-success btn-lg" href="{%url 'food:ccreate' %}">Complete profile</a>

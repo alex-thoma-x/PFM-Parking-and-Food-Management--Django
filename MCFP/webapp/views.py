@@ -3,7 +3,7 @@ from lib2to3.pgen2.tokenize import generate_tokens
 from sqlite3 import Timestamp
 from django.shortcuts import render, redirect,get_object_or_404
 from django.contrib.auth import authenticate, login,logout
-from .forms import CustomerSignUpForm,RestuarantSignUpForm,CustomerForm,RestuarantForm, feedback, itemadd
+from .forms import CustomerSignUpForm,RestuarantSignUpForm,CustomerForm,RestuarantForm, feedback, itemadd, mobile
 from django.contrib.auth.decorators import login_required
 from collections import Counter
 from django.urls import reverse
@@ -16,7 +16,7 @@ from parking.models import parking_slots
 import json
 import math, random
 from django.http import JsonResponse
-from parking.models import Vehicle
+from parking.models import Vehicle,Booking
 from parking.views import slotcheck
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail, BadHeaderError
@@ -32,6 +32,9 @@ import razorpay
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponseBadRequest
+from parking.views import slotcheck
+from datetime import  timedelta,timezone
+from dateutil.tz import gettz
  
 
 
@@ -183,7 +186,18 @@ def customerProfile(request,pk=None):
 		
 	else:
 		gate=False
-	return render(request,'webapp/profile.html',{'user':user,'gate':gate})
+	booking=Booking.objects.filter(mobile=request.user.customer.phone)
+	print(booking)
+	if booking.count()>0:
+		book=False
+		time=booking[0].time + timedelta(hours=1)
+		print(type(time))
+		bookgate=booking[0].gate
+	else:
+		time=None
+		book=True	
+		bookgate=None
+	return render(request,'webapp/profile.html',{'user':user,'gate':gate,'book':book,'time':time,'bgate':bookgate})
 
 
 #to find the parking slot of the registered user
@@ -494,6 +508,48 @@ def custorder(request):
 
 	return render(request,"webapp/custorder.html",context)
 
+
+
+def check_slot_booking():
+	if len(slotcheck('gate1'))>1:
+		free_slot= min(slotcheck('gate1'))
+		gate='gate1'
+	elif len(slotcheck('gate2'))>1:
+		free_slot= min(slotcheck('gate2'))
+		gate='gate2'
+	elif len(slotcheck('gate3'))>1:
+		free_slot= min(slotcheck('gate3'))
+		gate='gate3'
+	else:
+		free_slot=False
+		gate=False
+	return {1:free_slot,2:gate}
+
+def booking(request):
+
+	for record in Booking.objects.all():
+		time_elapsed = datetime.datetime.now(tz=gettz('Asia/Kolkata')) - record.time
+		if time_elapsed > timedelta(hours=1):
+			record.delete()
+	mob=request.user.customer.phone
+	book=Booking()
+	p=Booking.objects.filter(mobile=mob).count()
+	if p==0:
+		checkslot=check_slot_booking()
+		print(checkslot[1])
+		if checkslot[1]:
+			book.mobile=mob
+			book.slot=checkslot[1]
+			book.time=datetime.datetime.now(tz=gettz('Asia/Kolkata'))
+			book.gate=checkslot[2]
+			book.save()
+	return redirect('food:profile')
+
+	
+		
+
+
+
 ####### ------------------- Restaurant Side ------------------- #####
 
 # creating restuarant account
@@ -787,10 +843,12 @@ def analytics(request):
 	from django.db.models import Count,Sum
 	orders = Order.objects.filter(r_id=request.user.restaurant.id)
 	no_of_orders=orders.count()
+	print(no_of_orders)
 	orderitem=orderItem.objects.filter(ord_id__in=orders).values('item_id').order_by('item_id').annotate(dcount=Sum('quantity')).order_by('-dcount')
 	last_week_orders = Order.objects.filter(r_id=request.user.restaurant.id,timestamp__range=last_week())
+	print(last_week_orders)
 	no_of_last_week_orders=last_week_orders.count()
-	print(orderitem)
+	print(orderitem[0])
 	
 	max_ordered_item=orderitem[0]
 	print(max_ordered_item['item_id'])
@@ -799,11 +857,16 @@ def analytics(request):
 	print(max_ordered_item)
 
 
-
-	ordered_item_last_week=orderItem.objects.filter(ord_id__in=last_week_orders).values('item_id').order_by('item_id').annotate(dcount=Sum('quantity')).order_by('-dcount')
-	max_ordered_item_last_week=ordered_item_last_week[0]
-	max_ordered_item_last_week=Menu.objects.get(id=max_ordered_item_last_week['item_id'])
-	max_ordered_item_last_week=Item.objects.get(fname=max_ordered_item_last_week.item_id)
+	if last_week_orders.count():
+			ordered_item_last_week=orderItem.objects.filter(ord_id__in=last_week_orders).values('item_id').order_by('item_id').annotate(dcount=Sum('quantity')).order_by('-dcount')
+			max_ordered_item_last_week=ordered_item_last_week[0]
+			max_ordered_item_last_week=Menu.objects.get(id=max_ordered_item_last_week['item_id'])
+			max_ordered_item_last_week=Item.objects.get(fname=max_ordered_item_last_week.item_id)	
+			lastweekitemcount=ordered_item_last_week[0]['dcount']
+	else:
+		max_ordered_item_last_week="NO Data Avaialble"
+		lastweekitemcount="NO Data Avaialble"
+			
 	Total_revenue=0
 	for i in orderitem:
 	
@@ -817,7 +880,7 @@ def analytics(request):
 		'maxordereditem':max_ordered_item,
 		'maxitemcount':orderitem[0]['dcount'],
 		'maxorderlastweek':max_ordered_item_last_week,
-		'lastweekitemcount':ordered_item_last_week[0]['dcount'],
+		'lastweekitemcount':lastweekitemcount,
 		'total_revenue':Total_revenue,
 		'items':orderitem
 

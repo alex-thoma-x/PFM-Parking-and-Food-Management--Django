@@ -11,6 +11,8 @@ from django.contrib.auth.decorators import login_required
 from start.models import User
 import random
 import pytz
+from datetime import  timedelta,timezone
+from dateutil.tz import gettz
 # Create your views here.
 
 def Index(request):
@@ -177,12 +179,22 @@ def edit_category(request, pid):
     return render(request, 'parking/edit_category.html', d)
 
 def slotcheck(usr):
+    for record in Booking.objects.all():
+        time_elapsed = datetime.now(tz=gettz('Asia/Kolkata')) - record.time
+        if time_elapsed > timedelta(hours=1):
+            record.delete()
     slot_check_list=[i for i in range(1,21)]
     slot_check_set=set(slot_check_list)
     slot_value_db=Vehicle.objects.filter(status='In',gate=usr)
     for i in slot_value_db:
         if i.slot in slot_check_set:
             slot_check_set.remove(i.slot)
+    slot_value_db=Booking.objects.filter(gate=usr)
+    for i in slot_value_db:
+        if i.slot in slot_check_set:
+            slot_check_set.remove(i.slot)
+
+
     return slot_check_set
 
 @login_required(login_url='home:login')
@@ -223,6 +235,7 @@ def add_vehicle(request):
         if slot!=0:
             usr = request.user.username
             slot_check_set=slotcheck(usr)
+            
             free_slot= min(slot_check_set) #random.choice(tuple(slot_check_set))                   
 
             import time
@@ -233,6 +246,10 @@ def add_vehicle(request):
             rn = request.POST['regno']
             oc = request.POST['ownercontact']
             it = current_time
+            book=Booking.objects.filter(mobile=oc)
+            if book.count()>0:
+                free_slot=book[0].slot
+                book[0].delete()
             slt=free_slot
             
             

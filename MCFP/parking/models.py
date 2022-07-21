@@ -40,6 +40,13 @@ class Vehicle(models.Model):
     class Meta:        
         verbose_name="Vehicle"
 
+class Booking(models.Model):
+    mobile=models.IntegerField(null=False,default=0)
+    gate=models.CharField(null=False,max_length=8,default="gate1")
+    slot=models.IntegerField(null=False,default=-1)
+    time=models.DateTimeField(null=False)
+
+
 
 
 
